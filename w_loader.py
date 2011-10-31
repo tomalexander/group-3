@@ -1,6 +1,6 @@
 from terrain import terrain
 
-class loader:
+class w_loader:
     def __init__(self):
         pass
 
