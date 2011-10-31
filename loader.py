@@ -1,3 +1,5 @@
+from terrain import terrain
+
 class loader:
     def __init__(self):
         pass
