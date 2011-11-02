@@ -1,3 +1,4 @@
+from __future__ import division
 from velocity import Velocity
 import direct.directbase.DirectStart#starts Panda
 from pandac.PandaModules import *#basic Panda modules
@@ -19,11 +20,11 @@ class Car():
         self.hp = 100
         self.input = [False for i in range(5)]#left, right, up, down, space
         
-        taskMgr.add(self.move, "outtaThaWayImDrivingHere")
-        self.prevtime = 0
+        #taskMgr.add(self.move, "outtaThaWayImDrivingHere")
+        #self.prevtime = 0
         
-    def move(self, task):
-        elapsed = task.time - self.prevtime
+    def move(self, elapsed):
+        #elapsed = task.time - self.prevtime
         
         #all these numbers need to be tested
         if self.input[0]:#left
@@ -40,5 +41,5 @@ class Car():
             
         self.model.setPos(self.model.getX() + self.vel.x, self.model.getY() + self.vel.y, 0)
         
-        self.prevtime = task.time
+        #self.prevtime = task.time
         return Task.cont
