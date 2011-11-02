@@ -7,13 +7,14 @@ from direct.task import Task         #for update fuctions
 import sys, math, random
 from w_loader import w_loader
 from terrain import terrain
-
+from main_menu import *
 
 world_loader = w_loader()
 world_loader.load_world(1)
 
 class World(DirectObject): #subclassing here is necessary to accept events
     def __init__(self):
+        #WxPandaShell.__init__(self, fStartDirect=True) 
         #turn off default mouse control, otherwise can't reposition camera
         base.disableMouse()
         camera.setPosHpr(0, -15, 7, 0, -15, 0)
@@ -158,6 +159,9 @@ class World(DirectObject): #subclassing here is necessary to accept events
         cEntry.getIntoNodePath().getParent().remove()
         self.panda.play("eat")
 
+
+
+
+run_main_menu()
 w = World()
 run()
-
