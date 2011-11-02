@@ -44,6 +44,6 @@ class Velocity():
         self.y += y
         
     def addDM(self, deg, mag):
-        temp = ocity()
+        temp = Velocity()
         temp.setDM(deg, mag)
         self.addXY(temp.x, temp.y)
