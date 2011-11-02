@@ -19,5 +19,6 @@ class smoke_emitter():
         self.p.cleanup()
         self.p = ParticleEffect()
         self.p.loadConfig(file_name)
-        self.p.start(self.parent)
+        self.p.start(render)
         self.p.setPos(self.x, self.y, self.z)
+        self.p.reparentTo(self.parent)
