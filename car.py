@@ -11,6 +11,7 @@ class Car():
         self.model.reparentTo(render)
         self.model.setScale(.005)
         
+        #things that matter
         self.model.setPos(x, y, 0)
         self.model.setH(h)
         self.vel = Velocity()

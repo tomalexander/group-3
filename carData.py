@@ -6,10 +6,10 @@ import math
 
 class CarData():
     """Holds all the cars. All of them."""
-    def __init__ (self, spos):#takes in a list of x,y tuples, there should be 4 of these
+    def __init__ (self, spos, index):#takes in a list of x,y tuples, there should be 4 of these
         self.spos = spos
-        self.carlist = [Car(spos[0][0], spos[0][1], (math.degrees(math.atan2(15-spos[0][0], 15-spos[0][1]))-90)%360)]
-        self.spos.pop(0)
+        self.index = index
+        self.carlist = []
         
         taskMgr.add(self.move, "outtaThaWayImDrivingHere")
         self.prevtime = 0
