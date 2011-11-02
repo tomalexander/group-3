@@ -66,7 +66,7 @@ class Network(object):
             if self.cReader.getData(datagram):
                 self.myProcessDataFunction(datagram)
         carPosDatagrams = self.getCarPosDatagrams()
-        collsionDatagrams = self.getCollisionDatagrams()
+        collisionDatagrams = self.getCollisionDatagrams()
         for aClient in self.activeConnections:
             for data in carPosDatagrams:
                 self.cWriter.send(data, aClient)
@@ -92,6 +92,10 @@ class Network(object):
             carHeading = myIterator.getFloat32()
             carHp = myIterator.getInt32()
             self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carHp))
+        elif msgID == NEW_PLAYER_MESSAGE:
+            self.returnAllCars(netDatagram.getConnection())
+            self.cWriter.send(self.addNewCar(), netDatagram.getConnection())
+            
 
     def myNewPyDatagram(self):
         # Send a test message
@@ -109,9 +113,9 @@ class Network(object):
             self.carUpdates[carNum] = data
           
     def finalizeUpdates(self):
-        for i in range(self.carUpdates):
+        for i in range(len(self.carUpdates)):
             if self.carUpdates[i] != ():
-                if len(self.carData.carData) > i
+                if len(self.carData.carData) > i:
                     self.carData.carData[i] = self.carUpdates[i]
                 else:
                     for i in range(len(self.carData.carData), i+1):
@@ -126,24 +130,55 @@ class Network(object):
         myDatagrams = []
         for i in range(len(self.carData.carData)):
             if self.carData.carData[i] != ():
-                newDatagram = PyDatagram()
-                newDatagram.addUint8(CAR_MESSAGE)
-                newDatagram.addUint8(i)
-                for j in range(5):
-                    newDatagram.addFloat32(self.carData.carData[j])
-                newDatagram.addInt32(self.carData.carData[5])
+                print self.carData.carData[i]
+                newDatagram = self.getCarPosDatagram(i, self.carData.carData[i])
                 myDatagrams.append(newDatagram)
         return myDatagrams
     
+    def getCarPosDatagram(self, num, data):
+        newDatagram = PyDatagram()
+        newDatagram.addUint8(CAR_MESSAGE)
+        newDatagram.addUint8(num)
+        for j in range(5):
+            newDatagram.addFloat32(float(data[j]))
+        newDatagram.addInt32(data[5])
+        return newDatagram
+    
+    def getNewCarPosDatagram(self, num, data):
+        newDatagram = PyDatagram()
+        newDatagram.addUint8(PLAYER_ASSIGNMENT_MESSAGE)
+        newDatagram.addUint8(num)
+        for j in range(5):
+            newDatagram.addFloat32(float(data[j]))
+        newDatagram.addInt32(data[5])
+        return newDatagram
+    
     def getCollisionDatagrams(self):
         myDatagrams = []
-        for data in range(self.carData.collisionData):
+        for data in self.carData.collisionData:
             newDatagram = PyDatagram()
             newDatagram.addUint8(COLLIDED_MESSAGE)
             newDatagram.addUint8(data[0])
             newDatagram.addUint8(data[1])
             myDatagrams.append(newDatagram)
         return myDatagrams
+    
+    def returnAllCars(self, connection):
+        carPosDatagrams = self.getCarPosDatagrams()
+        for data in carPosDatagrams:
+            self.cWriter.send(data, connection)
+    
+    def addNewCar(self):
+        num = -1
+        for i in range(len(self.carData.carData)):
+            if self.carData.carData[i] == ():
+                num = i
+                self.carData.carData[i] = (0.0, 0.0, 0.0, 0.0, 0.0, 100)
+                break
+        else:
+            num = len(self.carData.carData)
+            self.carData.carData.append((0.0, 0.0, 0.0, 0.0, 0.0, 100))
+        return self.getNewCarPosDatagram(num, self.carData.carData[num])
 
 
 
