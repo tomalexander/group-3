@@ -1,4 +1,7 @@
 from __future__ import division
+from pandac.PandaModules import *#basic Panda modules
+from direct.interval.IntervalGlobal import *#for compound intervals
+from direct.task import Task#for update fuctions
 import math
 
 class CarData():
