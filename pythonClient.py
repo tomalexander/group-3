@@ -1,7 +1,7 @@
 import direct.directbase.DirectStart #starts Panda
 from pandac.PandaModules import *    #basic Panda modules
-from direct.distributed.PyDatagram import PyDatagram
-from direct.distributed.PyDatagramIterator import PyDatagramIterator 
+from direct.distributed.PyDatagram import PyDatagram #for packaging data
+from direct.distributed.PyDatagramIterator import PyDatagramIterator #for unpacking data
 from direct.showbase.DirectObject import DirectObject  #for event handling
 from direct.actor.Actor import Actor #for animated models
 from direct.interval.IntervalGlobal import *  #for compound intervals
@@ -9,27 +9,24 @@ from direct.task import Task         #for update fuctions
 import sys, math, random
 
 PRINT_MESSAGE = 1
+CAR_MESSAGE = 2
+COLLIDED_MESSAGE = 3
+NEW_PLAYER_MESSAGE = 4
+PLAYER_ASSIGNMENT_MESSAGE = 5
 
 
-"""
-A simple echo client
-"""
-"""
-import socket
+#
+class TempCarData(object):
+    def __init__(self):
+        self.collisionData = []
+        self.carData = []
+        self.playerNum = -1
 
-host = 'localhost'
-port = 50000
-size = 1024
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host,port))
-s.send('Hello, world')
-data = s.recv(size)
-s.close()
-print 'Received:', data 
-"""
+
 
 class Client(object):
     def __init__(self):
+        self.carData = TempCarData()
         
         self.cManager = QueuedConnectionManager()
         self.cListener = QueuedConnectionListener(self.cManager, 0)
@@ -49,6 +46,7 @@ class Client(object):
         if self.myConnection:
             self.cReader.addConnection(self.myConnection)  # receive messages from server
         
+        self.cWriter.send(self.newPlayerMessage(), self.myConnection)
         taskMgr.add(self.tskReaderPolling,"Poll the connection reader",-40)
     
     def tskReaderPolling(self, taskdata):
@@ -70,6 +68,20 @@ class Client(object):
             messageToPrint = myIterator.getString()
             print messageToPrint
             print "\n"
+        elif msgID == PLAYER_ASSIGNMENT_MESSAGE:
+            playerNum = myIterator.getUint8()
+            self.carData.playerNum = playerNum
+        elif msgID == CAR_MESSAGE:
+            carNum = myIterator.getUint8()
+            if carNum != self.carData.playerNum:
+                carXpos = myIterator.getFloat32()
+                carYpos = myIterator.getFloat32()
+                carXvel = myIterator.getFloat32()
+                carYvel = myIterator.getFloat32()
+                carHeading = myIterator.getFloat32()
+                carHp = myIterator.getInt32()
+                self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carHp))
+            
             
     def myNewPyDatagram(self):
         # Send a test message
@@ -77,6 +89,20 @@ class Client(object):
         myPyDatagram.addUint8(PRINT_MESSAGE)
         myPyDatagram.addString("Hello, world!")
         return myPyDatagram
+    
+    def newPlayerMessage(self):
+        # Send a request to join the game
+        myPyDatagram = PyDatagram()
+        myPyDatagram.addUint8(NEW_PLAYER_MESSAGE)
+        return myPyDatagram
+    
+    def updatePositions(self, carNum, data):
+        if len(self.carData.carData) > carNum:
+            self.carData.carData[carNum] = data
+        else:
+            for i in range(len(self.carData.carData),carNum+1):
+                self.carData.carData.append(())
+            self.carUpcarData.carData[carNum] = data
 #
 
 print "test1"
