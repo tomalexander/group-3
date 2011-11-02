@@ -1,9 +1,8 @@
 from __future__ import division
-from pandac.PandaModules import *#basic Panda modules
+from car import Car
 from direct.interval.IntervalGlobal import *#for compound intervals
 from direct.task import Task#for update fuctions
 import math
-from car import Car
 
 class CarData(DirectObject):
     """Holds all the cars. All of them."""
@@ -35,7 +34,7 @@ class CarData(DirectObject):
         return newcar
         
     def setKey(self, ind, value):
-        if self.carlist[self.index] != nil:
+        if self.carlist[self.index] != None:
             self.carlist[self.index].input[ind] = value
         
     def move(self, task):
