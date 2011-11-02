@@ -1,4 +1,5 @@
 import wx
+import socket
 
 panda_window_action = "none"
 panda_window_ip_address = ""
@@ -44,4 +45,5 @@ def run_main_menu():
     main_menu = panda_window(None, title='Main Selection')
     app.MainLoop()
     print panda_window_action, panda_window_ip_address
-    
+    addr = socket.gethostbyname(socket.gethostname())
+    print addr
