@@ -1,5 +1,6 @@
 import wx
 import socket
+import urllib2
 
 panda_window_action = "none"
 panda_window_ip_address = ""
@@ -23,7 +24,12 @@ class panda_window(wx.Frame):
         self.button_connect = wx.Button(self.panel, 2, label="Connect", pos=(103,90), size=(90, 28))
         self.Bind(wx.EVT_BUTTON, self.click_host, id=1)
         self.Bind(wx.EVT_BUTTON, self.click_connect, id=2)
+        self.get_ip_address()
         
+    def get_ip_address(self):
+        response = urllib2.urlopen('http://ip.paphus.com/')
+        ip = response.read()
+        self.text_ip_address.SetValue(ip)
 
     def start_game(self):
         self.Destroy()
