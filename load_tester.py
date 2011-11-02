@@ -8,6 +8,8 @@ import sys, math, random
 from w_loader import w_loader
 from terrain import terrain
 from main_menu import *
+from fog import *
+from smoke_emitter import *
 
 world_loader = w_loader()
 world_loader.load_world(1)
@@ -164,4 +166,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
 
 run_main_menu()
 w = World()
+game_fog()
+init_smoke()
+smoke_emitter(render, 0, 0, 0)
 run()

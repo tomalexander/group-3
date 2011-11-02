@@ -27,6 +27,7 @@ class panda_window(wx.Frame):
         self.get_ip_address()
         
     def get_ip_address(self):
+        return
         response = urllib2.urlopen('http://ip.paphus.com/')
         ip = response.read()
         self.text_ip_address.SetValue(ip)
