@@ -26,9 +26,9 @@ class Car():
         
         #all these numbers need to be tested
         if self.input[0]:#left
-            self.model.setH(self.model.getH() + elapsed * 20)#maybe multiply by speed?
+            self.model.setH(self.model.getH() + elapsed * 200)#maybe multiply by speed?
         if self.input[1]:#right
-            self.model.setH(self.model.getH() - elapsed * 20)
+            self.model.setH(self.model.getH() - elapsed * 200)
         if self.input[2]:#up
             self.vel.addDM(self.model.getH(), elapsed * 15)
             self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 5))#speed cap
@@ -40,4 +40,4 @@ class Car():
         self.model.setPos(self.model.getX() + self.vel.x, self.model.getY() + self.vel.y, 0)
         
         #self.prevtime = task.time
-        return Task.cont
+        #return Task.cont
