@@ -181,7 +181,7 @@ class Network(object):
         newDatagram.addInt32(self.carData.carlist[num].hp)
         return newDatagram
     
-    def getNewCarPosDatagram(self, num, data):
+    def getNewCarPosDatagram(self, num):
         newDatagram = PyDatagram()
         newDatagram.addUint8(PLAYER_ASSIGNMENT_MESSAGE)
         newDatagram.addUint8(num)
