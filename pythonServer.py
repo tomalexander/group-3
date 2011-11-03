@@ -22,8 +22,8 @@ class TempCarData(object):
         self.carData = []
         self.playerNum = 0
 
-class Network(object, cars):
-    def __init__(self):
+class Network(object):
+    def __init__(self, cars):
         self.carData = cars
         self.carData.addCar()
         self.carData.index = 0

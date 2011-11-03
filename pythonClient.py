@@ -68,6 +68,16 @@ class Client(object):
         elif msgID == PLAYER_ASSIGNMENT_MESSAGE:
             playerNum = myIterator.getUint8()
             self.carData.index = playerNum
+            carXpos = myIterator.getFloat32()
+            carYpos = myIterator.getFloat32()
+            carXvel = myIterator.getFloat32()
+            carYvel = myIterator.getFloat32()
+            carHeading = myIterator.getFloat32()
+            carInput = []
+            for i in range(5):
+                carInput.append(myIterator.getBool())
+            carHp = myIterator.getInt32()
+            self.updatePositions(playerNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carHp))
         elif msgID == CAR_MESSAGE:
             carNum = myIterator.getUint8()
             if carNum != self.carData.index:
@@ -98,12 +108,11 @@ class Client(object):
     
     def updatePositions(self, carNum, data):
         if len(self.carData.carlist) > carNum:
-            if carNum != self.carData.index:
-                self.carData.carlist[carNum].model.setPos(data[0], data[1], 0)
-                self.carData.carlist[carNum].vel.setXY(data[2], data[3])
-                self.carData.carlist[carNum].model.setH(data[4])
-                self.carData.carlist[carNum].input = data[5]
-                self.carData.carlist[carNum].hp = data[6]
+            self.carData.carlist[carNum].model.setPos(data[0], data[1], 0)
+            self.carData.carlist[carNum].vel.setXY(data[2], data[3])
+            self.carData.carlist[carNum].model.setH(data[4])
+            self.carData.carlist[carNum].input = data[5]
+            self.carData.carlist[carNum].hp = data[6]
         else:
             for i in range(len(self.carData.carlist), carNum+1):
                 self.carData.addCar()
