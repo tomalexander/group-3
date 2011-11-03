@@ -27,12 +27,12 @@ class panda_window(wx.Frame):
         self.get_ip_address()
         
     def get_ip_address(self):
-        return
         response = urllib2.urlopen('http://ip.paphus.com/')
         ip = response.read()
         self.text_ip_address.SetValue(ip)
 
     def start_game(self):
+        self.Close(True)
         self.Destroy()
 
     def click_host(self, event):
@@ -51,6 +51,6 @@ def run_main_menu():
     app = wx.App()
     main_menu = panda_window(None, title='Main Selection')
     app.MainLoop()
-    print panda_window_action, panda_window_ip_address
-    addr = socket.gethostbyname(socket.gethostname())
-    print addr
+    execfile("load_tester.py", {"panda_window_action" : panda_window_action, "panda_window_ip_address" : panda_window_ip_address})
+
+run_main_menu()
