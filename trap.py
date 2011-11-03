@@ -13,9 +13,21 @@ class trap:
         self.model.setScale(0.005)
         self.model.setPos(self.x, self.y, 0)
 
+    def set_up_collision_handler_event(self):
+        self.collision_handler = CollisionHandlerEvent()
+        self.collision_handler.setInPattern("trap-%in")
+
     def set_up_collisions(self):
         collision_sphere = CollisionSphere((0,0,0), 500)
         collision_node = CollisionNode("trap")
         collision_node.addSolid(collision_sphere)
         collision_node_path = self.model.attachNewNode(collision_node)
         collision_node_path.show()
+        #TODO add collision_node_path to collision traverser
+        # Ex: collision_traverser.addCollider(collision_node_path, collision_handler)
+
+        #TODO accept collisions
+        #  Ex: self.accept("trap-panda", self.hit)
+
+    def hit(self, collision_entry):
+        pass #https://www.panda3d.org/manual/index.php/Collision_Entries
