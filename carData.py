@@ -1,9 +1,8 @@
 from __future__ import division
-from pandac.PandaModules import *#basic Panda modules
+from car import Car
 from direct.interval.IntervalGlobal import *#for compound intervals
 from direct.task import Task#for update fuctions
 import math
-from car import Car
 
 class CarData(DirectObject):
     """Holds all the cars. All of them."""
@@ -35,13 +34,22 @@ class CarData(DirectObject):
         return newcar
         
     def setKey(self, ind, value):
-        if self.carlist[self.index] != nil:
+        if self.carlist[self.index] != None:
             self.carlist[self.index].input[ind] = value
         
     def move(self, task):
         elapsed = task.time - self.prevtime
         for car in self.carlist:
             car.move(elapsed)
+        
+        #put in camera stuff car.x+ carvel.x*modify, similar for y , 2 + carvel.getM * modify
+        if self.carlist[self.index] != None:
+            camera.setPos(\
+                self.carlist[self.index].model.getX() - self.carlist[self.index].vel.x*50,\
+                self.carlist[self.index].model.getY() - self.carlist[self.index].vel.y*50,\
+                self.carlist[self.index].model.getZ() + 10 - self.carlist[self.index].vel.getM()*4/5)
+            camera.lookAt(self.carlist[self.index].model)
+            camera.setP(camera.getP + 5 + self.carlist[self.index].vel.getM()*2)
         
         self.prevtime = task.time
         return Task.cont

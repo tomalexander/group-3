@@ -13,11 +13,13 @@ class smoke_emitter():
         self.z = _z
         self.parent = parent
         self.p = ParticleEffect()
-        self.load_config('smoke.ptf')
+        self.load_config('steam.ptf')
+        self.p.setScale(200)
 
     def load_config(self, file_name):
         self.p.cleanup()
         self.p = ParticleEffect()
         self.p.loadConfig(file_name)
-        self.p.start(self.parent)
+        self.p.start(render)
         self.p.setPos(self.x, self.y, self.z)
+        self.p.reparentTo(self.parent)
