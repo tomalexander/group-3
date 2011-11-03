@@ -25,8 +25,8 @@ class TempCarData(object):
 
 
 class Client(object):
-    def __init__(self):
-        self.carData = TempCarData()
+    def __init__(self, cars):
+        self.carData = cars
         
         self.cManager = QueuedConnectionManager()
         self.cListener = QueuedConnectionListener(self.cManager, 0)
@@ -50,8 +50,6 @@ class Client(object):
         taskMgr.add(self.tskReaderPolling,"Poll the connection reader",-40)
     
     def tskReaderPolling(self, taskdata):
-        myPyDatagram=self.myNewPyDatagram()  # build a datagram to send
-        self.cWriter.send(myPyDatagram, self.myConnection)
         while self.cReader.dataAvailable():
             datagram=NetDatagram()  # catch the incoming data in this instance
             # Check the return value; if we were threaded, someone else could have
@@ -67,20 +65,22 @@ class Client(object):
         if msgID == PRINT_MESSAGE:
             messageToPrint = myIterator.getString()
             print messageToPrint
-            print "\n"
         elif msgID == PLAYER_ASSIGNMENT_MESSAGE:
             playerNum = myIterator.getUint8()
-            self.carData.playerNum = playerNum
+            self.carData.index = playerNum
         elif msgID == CAR_MESSAGE:
             carNum = myIterator.getUint8()
-            if carNum != self.carData.playerNum:
+            if carNum != self.carData.index:
                 carXpos = myIterator.getFloat32()
                 carYpos = myIterator.getFloat32()
                 carXvel = myIterator.getFloat32()
                 carYvel = myIterator.getFloat32()
                 carHeading = myIterator.getFloat32()
+                carInput = []
+                for i in range(5):
+                    carInput.append(myIterator.getBool())
                 carHp = myIterator.getInt32()
-                self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carHp))
+                self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carHp))
             
             
     def myNewPyDatagram(self):
@@ -97,15 +97,26 @@ class Client(object):
         return myPyDatagram
     
     def updatePositions(self, carNum, data):
-        if len(self.carData.carData) > carNum:
-            self.carData.carData[carNum] = data
+        if len(self.carData.carlist) > carNum:
+            if carNum != self.carData.index:
+                self.carData.carlist[carNum].model.setPos(data[0], data[1], 0)
+                self.carData.carlist[carNum].vel.setXY(data[2], data[3])
+                self.carData.carlist[carNum].model.setH(data[4])
+                self.carData.carlist[carNum].input = data[5]
+                self.carData.carlist[carNum].hp = data[6]
         else:
-            for i in range(len(self.carData.carData),carNum+1):
-                self.carData.carData.append(())
-            self.carUpcarData.carData[carNum] = data
-#
+            for i in range(len(self.carData.carlist), carNum+1):
+                self.carData.addCar()
+            self.carData.carlist[carNum].model.setPos(data[0], data[1], 0)
+            self.carData.carlist[carNum].vel.setXY(data[2], data[3])
+            self.carData.carlist[carNum].model.setH(data[4])
+            self.carData.carlist[carNum].input = data[5]
+            self.carData.carlist[carNum].hp = data[6]
 
+
+"""
 print "test1"
 client = Client()
 run()
 print "test2"
+"""
