@@ -1,5 +1,6 @@
 from __future__ import division
 from car import Car
+from direct.showbase.DirectObject import DirectObject#for event handling
 from direct.interval.IntervalGlobal import *#for compound intervals
 from direct.task import Task#for update fuctions
 import math
