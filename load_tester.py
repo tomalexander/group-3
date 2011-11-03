@@ -164,9 +164,9 @@ class World(DirectObject): #subclassing here is necessary to accept events
 
 
 
-run_main_menu()
+#run_main_menu()
 w = World()
 game_fog()
 init_smoke()
-smoke_emitter(w.panda, 0, 0, 0)
+smoke_emitter(w.panda, 0, 0, 500)
 run()
