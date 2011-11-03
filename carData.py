@@ -4,7 +4,7 @@ from direct.showbase.DirectObject import DirectObject#for event handling
 from direct.interval.IntervalGlobal import *#for compound intervals
 from pandac.PandaModules import *#basic Panda modules
 from direct.task import Task#for update fuctions
-import math
+import sys, math
 
 class CarData(DirectObject):
     """Holds all the cars. All of them."""
@@ -13,6 +13,7 @@ class CarData(DirectObject):
         self.index = index
         self.carlist = []
         
+        self.accept("escape", sys.exit)
         self.accept("arrow_left", self.setKey, [0,True])
         self.accept("arrow_right", self.setKey, [1,True])
         self.accept("arrow_up", self.setKey, [2,True])
