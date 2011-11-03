@@ -40,4 +40,4 @@ class Car():
         self.model.setPos(self.model.getX() + self.vel.x, self.model.getY() + self.vel.y, 0)
         
         #self.prevtime = task.time
-        return Task.cont
+        #return Task.cont

@@ -4,7 +4,9 @@ from direct.showbase.DirectObject import DirectObject#for event handling
 from direct.interval.IntervalGlobal import *#for compound intervals
 from pandac.PandaModules import *#basic Panda modules
 from direct.task import Task#for update fuctions
+from direct.actor.Actor import Actor#for animated models
 import sys, math
+import pythonServer
 
 class CarData(DirectObject):
     """Holds all the cars. All of them."""
@@ -30,7 +32,7 @@ class CarData(DirectObject):
         
     def addCar(self):
         pos = self.spos.pop()
-        newcar = Car(pos[0][0], pos[0][1], (math.degrees(math.atan2(15-pos[0][0], 15-pos[0][1]))-90)%360)
+        newcar = Car(pos[0], pos[1], (math.degrees(math.atan2(15-pos[0], 15-pos[1]))-90)%360)
         self.carlist.append(newcar)
         return newcar
         
@@ -50,7 +52,11 @@ class CarData(DirectObject):
                 self.carlist[self.index].model.getY() - self.carlist[self.index].vel.y*50,\
                 self.carlist[self.index].model.getZ() + 10 - self.carlist[self.index].vel.getM()*4/5)
             camera.lookAt(self.carlist[self.index].model)
-            camera.setP(camera.getP + 5 + self.carlist[self.index].vel.getM()*2)
+            camera.setP(camera.getP() + 5 + self.carlist[self.index].vel.getM()*2)
         
         self.prevtime = task.time
         return Task.cont
+
+DasKars = CarData([(0,0), (5,5), (5,0), (0,5)], -1)
+DeServer = pythonServer.Network(DasKars)
+run()
