@@ -28,8 +28,6 @@ class CarData(DirectObject):
         taskMgr.add(self.move, "outtaThaWayImDrivingHere")
         self.prevtime = 0
         
-        return self.carlist[0]
-        
     def addCar(self):
         pos = self.spos.pop()
         newcar = Car(pos[0][0], pos[0][1], (math.degrees(math.atan2(15-pos[0][0], 15-pos[0][1]))-90)%360)
