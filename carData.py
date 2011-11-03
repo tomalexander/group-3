@@ -56,7 +56,3 @@ class CarData(DirectObject):
         
         self.prevtime = task.time
         return Task.cont
-
-DasKars = CarData([(0,0), (5,5), (5,0), (0,5)], -1)
-DeServer = pythonServer.Network(DasKars)
-run()
