@@ -7,7 +7,6 @@ from direct.task import Task         #for update fuctions
 import sys, math, random
 from w_loader import w_loader
 from terrain import terrain
-from main_menu import *
 from fog import *
 from smoke_emitter import *
 
@@ -162,9 +161,8 @@ class World(DirectObject): #subclassing here is necessary to accept events
         self.panda.play("eat")
 
 
-
-
-#run_main_menu()
+global panda_window_action, panda_window_ip_address
+print panda_window_action, panda_window_ip_address
 w = World()
 game_fog()
 init_smoke()
