@@ -27,6 +27,7 @@ class TempCarData(object):
 class Client(object):
     def __init__(self, cars):
         self.carData = cars
+        self.carData.index = -1
         
         self.cManager = QueuedConnectionManager()
         self.cListener = QueuedConnectionListener(self.cManager, 0)
@@ -57,6 +58,9 @@ class Client(object):
             
             if self.cReader.getData(datagram):
                 self.myProcessDataFunction(datagram)
+        myCarDatagram = self.getPosDatagram()
+        if myCarDatagram != None:
+            self.cWriter.send(myCarDatagram, self.myConnection)
         return Task.cont
     
     def myProcessDataFunction(self, netDatagram):
@@ -91,6 +95,10 @@ class Client(object):
                     carInput.append(myIterator.getBool())
                 carHp = myIterator.getInt32()
                 self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carHp))
+        elif msgID == COLLISION_MESSAGE:
+            collisionFrom = myIterator.getUint8()
+            if collisionFrom == self.carData.index:
+                self.doCarCollision(myIterator.getUint8())
             
             
     def myNewPyDatagram(self):
@@ -121,6 +129,27 @@ class Client(object):
             self.carData.carlist[carNum].model.setH(data[4])
             self.carData.carlist[carNum].input = data[5]
             self.carData.carlist[carNum].hp = data[6]
+    
+    def getPosDatagram(self):
+        num = self.carData.index
+        if num < 0:
+            return None
+        newDatagram = PyDatagram()
+        newDatagram.addUint8(CAR_MESSAGE)
+        newDatagram.addUint8(num)
+        newDatagram.addFloat32(self.carData.carlist[num].model.getX())
+        newDatagram.addFloat32(self.carData.carlist[num].model.getY())
+        vel = self.carData.carlist[num].vel.getXY()
+        newDatagram.addFloat32(vel[0])
+        newDatagram.addFloat32(vel[1])
+        newDatagram.addFloat32(self.carData.carlist[num].model.getH())
+        for j in range(5):
+            newDatagram.addBool(self.carData.carlist[num].input[j])
+        newDatagram.addInt32(self.carData.carlist[num].hp)
+        return newDatagram
+    
+    def doCarCollision(self, otherCarNum):
+        pass
 
 
 """

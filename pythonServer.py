@@ -28,6 +28,7 @@ class Network(object):
         self.carData.addCar()
         self.carData.index = 0
         self.carUpdates = [() for c in self.carData.carlist]
+        self.collisionData = []
         
         self.cManager = QueuedConnectionManager()
         self.cListener = QueuedConnectionListener(self.cManager, 0)
@@ -73,7 +74,6 @@ class Network(object):
                 self.cWriter.send(data, aClient)
             for data in collisionDatagrams:
                 self.cWriter.send(data, aClient)
-        #self.finalizeUpdates() #Not currently used
         self.clearCarData() #This is to prevent redundant messages from being sent
         return Task.cont
     
@@ -144,7 +144,7 @@ class Network(object):
     
     def clearCarData(self):
         self.carUpdates = [() for c in self.carData.carlist]
-        #self.carData.collisionData = []
+        self.collisionData = []
     
     def getCarPosDatagrams(self):
         myDatagrams = []
@@ -197,9 +197,8 @@ class Network(object):
         return newDatagram
     
     def getCollisionDatagrams(self):
-        return []
         myDatagrams = []
-        for data in self.carData.collisionData:
+        for data in self.collisionData:
             newDatagram = PyDatagram()
             newDatagram.addUint8(COLLIDED_MESSAGE)
             newDatagram.addUint8(data[0])
