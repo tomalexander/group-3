@@ -37,7 +37,7 @@ class CarData(DirectObject):
         return newcar
         
     def setKey(self, ind, value):
-        if self.carlist[self.index] != None:
+        if self.index >= 0 and self.index < len(self.carlist):
             self.carlist[self.index].input[ind] = value
         
     def move(self, task):
@@ -46,11 +46,11 @@ class CarData(DirectObject):
             car.move(elapsed)
         
         #put in camera stuff car.x+ carvel.x*modify, similar for y , 2 + carvel.getM * modify
-        if self.carlist[self.index] != None:
+        if self.index >= 0 and self.index < len(self.carlist):
             camera.setPos(\
-                self.carlist[self.index].model.getX() - self.carlist[self.index].vel.x*50,\
-                self.carlist[self.index].model.getY() - self.carlist[self.index].vel.y*50,\
-                self.carlist[self.index].model.getZ() + 10 - self.carlist[self.index].vel.getM()*4/5)
+                self.carlist[self.index].model.getX(),\
+                self.carlist[self.index].model.getY(),\
+                self.carlist[self.index].model.getZ() + 50)
             camera.lookAt(self.carlist[self.index].model)
             camera.setP(camera.getP() + 5 + self.carlist[self.index].vel.getM()*2)
         
