@@ -48,8 +48,8 @@ class CarData(DirectObject):
         #put in camera stuff car.x+ carvel.x*modify, similar for y , 2 + carvel.getM * modify
         if self.index >= 0 and self.index < len(self.carlist):
             camera.setPos(\
-                self.carlist[self.index].model.getX() - self.carlist[self.index].vel.x,\
-                self.carlist[self.index].model.getY() - self.carlist[self.index].vel.y,\
+                self.carlist[self.index].model.getX() - self.carlist[self.index].vel.x * 4,\
+                self.carlist[self.index].model.getY() - self.carlist[self.index].vel.y * 4,\
                 self.carlist[self.index].model.getZ() + 75 - self.carlist[self.index].vel.getM()*15/2)
             camera.lookAt(self.carlist[self.index].model)
             camera.setP(camera.getP() + self.carlist[self.index].vel.getM()*2)
