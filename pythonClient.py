@@ -25,7 +25,7 @@ class TempCarData(object):
 
 
 class Client(object):
-    def __init__(self, cars):
+    def __init__(self, cars, ip_address):
         self.carData = cars
         self.carData.index = -1
         
@@ -38,7 +38,7 @@ class Client(object):
          
          # a valid server URL. You can also use a DNS name
          # if the server has one, such as "localhost" or "panda3d.org"
-        self.ip_address="localhost"
+        self.ip_address=ip_address
          
          # how long until we give up trying to reach the server?
         self.timeout_in_miliseconds=3000  # 3 seconds

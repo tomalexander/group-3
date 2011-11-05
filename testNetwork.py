@@ -16,6 +16,6 @@ DasKars = carData.CarData([(0,0), (5,5), (5,0), (0,5)], -1)
 def makeServer():
     DeServer = pythonServer.Network(DasKars)
     run()
-def makeClient():
-    DeServer = pythonClient.Client(DasKars)
+def makeClient(ip_address):
+    DeServer = pythonClient.Client(DasKars, ip_address)
     run()
