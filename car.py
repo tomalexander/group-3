@@ -33,11 +33,14 @@ class Car():
             self.model.setH(self.model.getH() + elapsed * 200)#maybe multiply by speed?
         if self.input[1]:#right
             self.model.setH(self.model.getH() - elapsed * 200)
+        tempmag = self.vel.getM()
+        self.vel.addDM(self.model.getH(), elapsed * 1)
+        self.vel.setDM(self.vel.getD(), tempmag)
         if self.input[2]:#up
-            self.vel.addDM(self.model.getH(), elapsed * 5)
+            self.vel.addDM(self.model.getH(), elapsed * 4)
             self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
         if self.input[3]:#down
-            self.vel.addDM(self.model.getH(), elapsed * -5)
+            self.vel.addDM(self.model.getH(), elapsed * -4)
             self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
         self.vel.setDM(self.vel.getD(), self.vel.getM()*(1-.02-.13*self.input[4]))#friction
             
