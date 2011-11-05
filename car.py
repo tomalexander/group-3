@@ -3,7 +3,7 @@ from velocity import Velocity
 from pandac.PandaModules import *#basic Panda modules
 from direct.showbase.DirectObject import DirectObject#for event handling
 from direct.actor.Actor import Actor#for animated models
-import sys, os
+import sys, os, math
 
 class Car():
     """This is a car."""
@@ -42,8 +42,10 @@ class Car():
         if self.input[3]:#down
             self.vel.addDM(self.model.getH(), elapsed * -4)
             self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
-        self.vel.setDM(self.vel.getD(), self.vel.getM()*(1-.02-.13*self.input[4]))#friction
-            
+        #self.vel.setDM(self.vel.getD(), self.vel.getM()*math.pow(1-(.02+.13*self.input[4]),elapsed))#friction
+        if self.vel.getM() > 0:
+            self.vel.setDM(self.vel.getD(), self.vel.getM() - (elapsed * .5))
+        
         self.model.setPos(self.model.getX() + self.vel.x, self.model.getY() + self.vel.y, 0)
         
         #self.prevtime = task.time
