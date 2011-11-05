@@ -3,10 +3,14 @@ from velocity import Velocity
 from pandac.PandaModules import *#basic Panda modules
 from direct.showbase.DirectObject import DirectObject#for event handling
 from direct.actor.Actor import Actor#for animated models
+import sys, os
 
 class Car():
     """This is a car."""
     def __init__ (self, x=0, y=0, h=0):
+        #mydir = os.path.abspath(sys.path[0])
+        #mydir = Filename.fromOsSpecific(mydir).getFullpath()
+        #self.model = loader.loadModel(mydir + "/models/newcar.egg")
         self.model = Actor("models/panda-model")
         self.model.reparentTo(render)
         self.model.setScale(.005)
@@ -33,9 +37,9 @@ class Car():
             self.vel.addDM(self.model.getH(), elapsed * 5)
             self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
         if self.input[3]:#down
-            self.vel.addDM(self.model.getH(), elapsed * -55)
+            self.vel.addDM(self.model.getH(), elapsed * -5)
             self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
-        self.vel.setDM(self.vel.getD(), self.vel.getM()*(1-.02-.18*self.input[4]))#friction
+        self.vel.setDM(self.vel.getD(), self.vel.getM()*(1-.02-.13*self.input[4]))#friction
             
         self.model.setPos(self.model.getX() + self.vel.x, self.model.getY() + self.vel.y, 0)
         
