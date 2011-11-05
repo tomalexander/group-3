@@ -47,3 +47,10 @@ class Velocity():
         temp = Velocity()
         temp.setDM(deg, mag)
         self.addXY(temp.x, temp.y)
+    
+    def getMInD(self, D):
+        temp = Velocity()
+        temp.setDM(D, 1)
+        x = self.x * temp.x
+        y = self.y * temp.y
+        return math.hypot(x, y)
