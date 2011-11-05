@@ -37,7 +37,7 @@ class Car():
             self.vel.addDM(self.model.getH(), elapsed * 5)
             self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
         if self.input[3]:#down
-            self.vel.addDM(self.model.getH(), elapsed * -55)
+            self.vel.addDM(self.model.getH(), elapsed * -5)
             self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
         self.vel.setDM(self.vel.getD(), self.vel.getM()*(1-.02-.13*self.input[4]))#friction
             
