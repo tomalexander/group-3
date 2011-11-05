@@ -51,6 +51,7 @@ class Client(object):
         taskMgr.add(self.tskReaderPolling,"Poll the connection reader",-40)
     
     def tskReaderPolling(self, taskdata):
+        self.updates = [() for i in self.carData.carlist]
         while self.cReader.dataAvailable():
             datagram=NetDatagram()  # catch the incoming data in this instance
             # Check the return value; if we were threaded, someone else could have

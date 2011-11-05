@@ -150,7 +150,6 @@ class Network(object):
         myDatagrams = []
         for i in range(len(self.carUpdates)):
             if self.carUpdates[i] != ():
-                print self.carUpdates[i]
                 newDatagram = self.getCarPosDatagram(i, self.carUpdates[i])
                 myDatagrams.append(newDatagram)
         return myDatagrams

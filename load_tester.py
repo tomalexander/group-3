@@ -9,6 +9,8 @@ from w_loader import w_loader
 from terrain import terrain
 from fog import *
 from smoke_emitter import *
+from carData import CarData
+import pythonServer, pythonClient
 
 world_loader = w_loader()
 world_loader.load_world(1)
@@ -104,7 +106,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
     
     def move(self, task):
         elapsed = task.time - self.prevtime
-        camera.lookAt(self.panda)
+        #camera.lookAt(self.panda)
         if self.keyMap["left"]:
             self.panda.setH(self.panda.getH() + elapsed*100)
         if self.keyMap["right"]:
@@ -167,4 +169,11 @@ w = World()
 game_fog()
 init_smoke()
 smoke_emitter(w.panda, 0, 0, 500)
+if panda_window_action == "host":
+    w.cars = CarData([(0,0), (0,5), (5,5), (5,0)], 0)
+    w.connection = pythonServer.Network(w.cars)
+elif panda_window_action == "connect":
+    print "Made it to client creation"
+    w.cars = CarData([(0,0), (0,5), (5,5), (5,0)], 0)
+    w.connection = pythonClient.Client(w.cars, panda_window_ip_address)
 run()
