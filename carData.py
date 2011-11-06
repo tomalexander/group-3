@@ -26,6 +26,7 @@ class CarData(DirectObject):
         self.accept("arrow_up-up", self.setKey, [2,False])
         self.accept("arrow_down-up", self.setKey, [3,False])
         self.accept("space-up", self.setKey, [4,False])
+        self.accept("lshift", self.toggleHeadlights)
         
         taskMgr.add(self.move, "outtaThaWayImDrivingHere")
         self.prevtime = 0
@@ -39,6 +40,10 @@ class CarData(DirectObject):
     def setKey(self, ind, value):
         if self.index >= 0 and self.index < len(self.carlist):
             self.carlist[self.index].input[ind] = value
+    
+    def toggleHeadlights(self):
+        if self.index >= 0 and self.index < len(self.carlist):
+            self.carlist[self.index].toggleHeadlights()
         
     def move(self, task):
         elapsed = task.time - self.prevtime

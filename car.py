@@ -25,6 +25,28 @@ class Car():
         #taskMgr.add(self.move, "outtaThaWayImDrivingHere")
         #self.prevtime = 0
         
+        self.setUpHeadlights()
+    
+    def setUpHeadlights(self):
+        self.headlights = Spotlight("headlights")
+        self.headlights.setColor(VBase4(1, 1, 1, 1))
+        lens = PerspectiveLens()
+        lens.setFov(90, 60)
+        self.headlights.setLens(lens)
+        slnp = self.model.attachNewNode(self.headlights)
+        slnp.setPos(0, 0, 0)
+        slnp.setHpr(0,0,0)
+        render.setLight(slnp)
+        self.lightsOn = True
+    
+    def toggleHeadlights(self):
+        if self.lightsOn:
+            self.headlights.setColor(VBase4(0, 0, 0, 1))
+            self.lightsOn = False
+        else:
+            self.headlights.setColor(VBase4(1, 1, 1, 1))
+            self.lightsOn = True
+    
     def move(self, elapsed):
         #elapsed = task.time - self.prevtime
         
@@ -44,7 +66,7 @@ class Car():
             self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
         #self.vel.setDM(self.vel.getD(), self.vel.getM()*math.pow(1-(.02+.13*self.input[4]),elapsed))#friction
         if self.vel.getM() > 0:
-            self.vel.setDM(self.vel.getD(), self.vel.getM() - (elapsed * .5))
+            self.vel.setDM(self.vel.getD(), max(self.vel.getM() - (elapsed * .5),0))
         
         self.model.setPos(self.model.getX() + self.vel.x, self.model.getY() + self.vel.y, 0)
         
