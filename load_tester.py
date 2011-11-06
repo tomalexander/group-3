@@ -174,6 +174,6 @@ if panda_window_action == "host":
     w.connection = pythonServer.Network(w.cars)
 elif panda_window_action == "connect":
     print "Made it to client creation"
-    w.cars = CarData([(0,0), (0,5), (5,5), (5,0)], 0)
+    w.cars = CarData([(0,0), (0,5), (5,5), (5,0)], -1)
     w.connection = pythonClient.Client(w.cars, panda_window_ip_address)
 run()
