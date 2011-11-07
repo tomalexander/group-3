@@ -57,8 +57,6 @@ class Car():
             self.lightsOn = True
     
     def move(self, elapsed):
-        #elapsed = task.time - self.prevtime
-        
         #all these numbers need to be tested
         if self.input[0]:#left
             self.model.setH(self.model.getH() + elapsed * 200)#maybe multiply by speed?
@@ -68,7 +66,7 @@ class Car():
         self.vel.addDM(self.model.getH(), elapsed * 1)
         self.vel.setDM(self.vel.getD(), tempmag)
         if self.vel.getM() > 0:
-            self.vel.setDM(self.vel.getD(), max(self.vel.getM() - (elapsed * (.5 + 2.5*self.input[4])),0))
+            self.vel.setDM(self.vel.getD(), max(self.vel.getM() - (elapsed * (.5 + 3.5*self.input[4])),0))
         if self.input[2]:#up
             self.vel.addDM(self.model.getH(), elapsed * 4)
             self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
@@ -77,5 +75,3 @@ class Car():
             self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
         self.model.setPos(self.model.getX() + self.vel.x, self.model.getY() + self.vel.y, 0)
         
-        #self.prevtime = task.time
-        #return Task.cont
