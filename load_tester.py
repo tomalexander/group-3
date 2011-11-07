@@ -39,6 +39,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #"mouse1" is left mouse button is clicked
         #append "-up" for equivalent of for equivalent of KEYUP event
         self.accept("ate-smiley", self.eat)
+        base.camLens.setFar(700)
     
     def setKey(self, key, value):
         self.keyMap[key] = value
