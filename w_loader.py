@@ -1,4 +1,5 @@
 from terrain import terrain
+from tile import *
 
 class w_loader:
     def __init__(self):
@@ -18,6 +19,12 @@ class w_loader:
     def handle_line(self, line, y_pos):
         x_pos = 0
         for cell in line:
-            new_cell = terrain(x_pos, y_pos, 0, self)
-            self.cell_list.append(new_cell)
+            if cell == '0':
+                new_cell = tile(x_pos, y_pos, 0, self)
+                new_cell.load_model()
+                self.cell_list.append(new_cell)
+            else:
+                new_cell = terrain(x_pos, y_pos, 0, self)
+                new_cell.load_model()
+                self.cell_list.append(new_cell)
             x_pos = x_pos + self.cell_width

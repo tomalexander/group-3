@@ -7,7 +7,6 @@ class terrain:
         self.y = _y
         self.type = _type
         self.w_loader = _w_loader;
-        self.load_model()
 
     def load_model(self):
         self.model = Actor("models/panda-model", {"walk":"panda-walk4"})
