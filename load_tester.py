@@ -69,20 +69,20 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #ambient light
         self.ambientLight = AmbientLight("ambientLight") #parameter is a name
         #four values, RGBA, Alpha is largely irrelevant, value [0,1]
-        self.ambientLight.setColor((.25, .25, .25, 1))
+        self.ambientLight.setColor((.05, .05, .05, 1))
         self.ambientLightNP = render.attachNewNode(self.ambientLight)
         #the nodepath that calls setLight is what gets illuminated by the light
         render.setLight(self.ambientLightNP)
         #call clearLight() to turn it off
         
         self.keyLight = DirectionalLight("keyLight")
-        self.keyLight.setColor((.6, .6, .6, 1))
+        self.keyLight.setColor((.1, .1, .1, 1))
         self.keyLightNP = render.attachNewNode(self.keyLight)
         self.keyLightNP.setHpr(0, -26, 0)
         render.setLight(self.keyLightNP)
         
         self.fillLight = DirectionalLight("fillLight")
-        self.fillLight.setColor((.3, .3, .3, 1))
+        self.fillLight.setColor((.03, .03, .03, 1))
         self.fillLightNP = render.attachNewNode(self.fillLight)
         self.fillLightNP.setHpr(30, 0, 0)
         render.setLight(self.fillLightNP)
