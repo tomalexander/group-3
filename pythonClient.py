@@ -46,6 +46,9 @@ class Client(object):
         self.myConnection = self.cManager.openTCPClientConnection(self.ip_address, self.port_address, self.timeout_in_miliseconds)
         if self.myConnection:
             self.cReader.addConnection(self.myConnection)  # receive messages from server
+        else:
+            print "No connection found!"
+            sys.exit()
         
         self.cWriter.send(self.newPlayerMessage(), self.myConnection)
         taskMgr.add(self.tskReaderPolling,"Poll the connection reader",-40)

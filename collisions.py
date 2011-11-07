@@ -22,3 +22,6 @@ def collideCars(firstCar, secondCar):
        dx = 1 / dist * x
        dy = 1 / dist * y
        firstCar.model.setPos(firstCar.model.getX() - dx + x, firstCar.model.getY() - dy + y)
+
+def bumperCollision(car, bumper):
+    pass
