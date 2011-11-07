@@ -5,7 +5,6 @@ class trap:
         self.x = _x
         self.y = _y
         self.type = _type
-        self.load_model()
 
     def load_model(self):
         self.model = Actor("models/panda-model", {"walk":"panda-walk4"})
