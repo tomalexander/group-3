@@ -1,4 +1,5 @@
 from __future__ import division
+from velocity import Velocity
 from car import Car
 from direct.showbase.DirectObject import DirectObject#for event handling
 from direct.interval.IntervalGlobal import *#for compound intervals
@@ -33,8 +34,18 @@ class CarData(DirectObject):
         
     def addCar(self):
         pos = self.spos.pop()
-        newcar = Car(pos[0], pos[1], (math.degrees(math.atan2(15-pos[0], 15-pos[1]))-90)%360)
+        newcar = Car(pos[0], pos[1], 0)
+        #newcar = Car(pos[0], pos[1], (math.degrees(math.atan2(15-pos[0], 15-pos[1]))-90)%360)
         self.carlist.append(newcar)
+        if self.index >= 0 and self.index == len(self.carlist) - 1:
+            tempvel = Velocity()
+            tempvel.setDM(newcar.model.getH(), -50)
+            camera.setPos(\
+                newcar.model.getX() + tempvel.x,\
+                newcar.model.getY() + tempvel.y,\
+                newcar.model.getZ() + 40)
+            camera.lookAt(newcar.model)
+            camera.setP(camera.getP() + 5)
         return newcar
         
     def setKey(self, ind, value):
@@ -52,12 +63,20 @@ class CarData(DirectObject):
         
         #put in camera stuff car.x+ carvel.x*modify, similar for y , 2 + carvel.getM * modify
         if self.index >= 0 and self.index < len(self.carlist):
+            #camera.setPos(\
+            #    self.carlist[self.index].model.getX() - self.carlist[self.index].vel.x * 35,\
+            #    self.carlist[self.index].model.getY() - self.carlist[self.index].vel.y * 35,\
+            #    self.carlist[self.index].model.getZ() + 75 - self.carlist[self.index].vel.getM()*40/2)
+            #camera.lookAt(self.carlist[self.index].model)
+            #camera.setP(camera.getP() + self.carlist[self.index].vel.getM()*10/2)
+            tempvel = Velocity()
+            tempvel.setDM(self.carlist[self.index].model.getH(), -50)
             camera.setPos(\
-                self.carlist[self.index].model.getX() - self.carlist[self.index].vel.x * 35,\
-                self.carlist[self.index].model.getY() - self.carlist[self.index].vel.y * 35,\
-                self.carlist[self.index].model.getZ() + 75 - self.carlist[self.index].vel.getM()*40/2)
+                self.carlist[self.index].model.getX() + tempvel.x,\
+                self.carlist[self.index].model.getY() + tempvel.y,\
+                self.carlist[self.index].model.getZ() + 40)
             camera.lookAt(self.carlist[self.index].model)
-            camera.setP(camera.getP() + self.carlist[self.index].vel.getM()*10/2)
+            camera.setP(camera.getP() + 5)
         
         self.prevtime = task.time
         return Task.cont
