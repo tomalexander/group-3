@@ -58,16 +58,14 @@ class Car():
         tempmag = self.vel.getM()
         self.vel.addDM(self.model.getH(), elapsed * 1)
         self.vel.setDM(self.vel.getD(), tempmag)
-        if self.input[2]:#up
-            self.vel.addDM(self.model.getH(), elapsed * 4)
-            #self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
-        if self.input[3]:#down
-            self.vel.addDM(self.model.getH(), elapsed * -4)
-            #self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
-        #self.vel.setDM(self.vel.getD(), self.vel.getM()*math.pow(1-(.02+.13*self.input[4]),elapsed))#friction
         if self.vel.getM() > 0:
             self.vel.setDM(self.vel.getD(), max(self.vel.getM() - (elapsed * (.5 + 1.5*self.input[4])),0))
-        self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
+        if self.input[2]:#up
+            self.vel.addDM(self.model.getH(), elapsed * 4)
+            self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
+        if self.input[3]:#down
+            self.vel.addDM(self.model.getH(), elapsed * -4)
+            self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
         self.model.setPos(self.model.getX() + self.vel.x, self.model.getY() + self.vel.y, 0)
         
         #self.prevtime = task.time
