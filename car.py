@@ -66,12 +66,12 @@ class Car():
         self.vel.addDM(self.model.getH(), elapsed * 1)
         self.vel.setDM(self.vel.getD(), tempmag)
         if self.vel.getM() > 0:
-            self.vel.setDM(self.vel.getD(), max(self.vel.getM() - (elapsed * (.5 + 3.5*self.input[4])),0))
+            self.vel.setDM(self.vel.getD(), max(self.vel.getM() - (elapsed * (.5 + 2.5*self.input[4])),0))
         if self.input[2]:#up
             self.vel.addDM(self.model.getH(), elapsed * 4)
-            self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
+            self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 4))#speed cap
         if self.input[3]:#down
             self.vel.addDM(self.model.getH(), elapsed * -4)
-            self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 2))#speed cap
+            self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 4))#speed cap
         self.model.setPos(self.model.getX() + self.vel.x, self.model.getY() + self.vel.y, 0)
         
