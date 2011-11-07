@@ -1,5 +1,6 @@
 from terrain import terrain
 from tile import *
+from spike import *
 
 class w_loader:
     def __init__(self):
@@ -21,6 +22,10 @@ class w_loader:
         for cell in line:
             if cell == '0':
                 new_cell = tile(x_pos, y_pos, 0, self)
+                new_cell.load_model()
+                self.cell_list.append(new_cell)
+            elif cell == 's':
+                new_cell = spike(x_pos, y_pos)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
             else:
