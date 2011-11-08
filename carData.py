@@ -43,11 +43,10 @@ class CarData(DirectObject):
         
     def addCar(self):
         pos = self.spos.pop()
-        newcar = Car(pos[0], pos[1], (math.degrees(math.atan2(500-pos[0], 500-pos[1]))-90)%360)
-        #newcar = Car(pos[0], pos[1], (math.degrees(math.atan2(525-pos[0], 525-pos[1]))-90)%360)
+        tempvel = Velocity(500 - pos[0], 500 - pos[1])
+        newcar = Car(pos[0], pos[1], tempvel.getD())
         self.carlist.append(newcar)
         if self.index >= 0 and self.index == len(self.carlist) - 1:
-            tempvel = Velocity()
             tempvel.setDM(newcar.model.getH(), -75)
             camera.setPos(\
                 newcar.model.getX() + tempvel.x,\
