@@ -4,6 +4,7 @@ from spike import *
 from sticky import *
 from piston import *
 from pit import *
+from bumper import *
 
 class w_loader:
     def __init__(self):
@@ -41,6 +42,10 @@ class w_loader:
                 self.cell_list.append(new_cell)
             elif cell == 'i':
                 new_cell = pit(x_pos, y_pos)
+                new_cell.load_model()
+                self.cell_list.append(new_cell)
+            elif cell == 'b':
+                new_cell = bumper(x_pos, y_pos)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
             else:
