@@ -20,4 +20,4 @@ class bumper(trap):
         self.collision_node = CollisionNode("bumper")
         self.collision_node.addSolid(self.collision_body)
         self.collision_node_path = self.model.attachNewNode(self.collision_node)
-        #self.collision_node_path.show()
+        self.collision_node_path.show()
