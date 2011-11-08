@@ -26,7 +26,8 @@ class panda_window(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.click_host, id=1)
         self.Bind(wx.EVT_BUTTON, self.click_connect, id=2)
         self.Bind(wx.EVT_BUTTON, self.click_refresh, id=3)
-        self.server_list = wx.ListBox(self.panel, id=4, pos=(3,140), size=(280,200))
+        self.label_ip_address = wx.StaticText(self.panel, label="Running Servers:", pos=(3,140))
+        self.server_list = wx.ListBox(self.panel, id=4, pos=(3,160), size=(260,200))
         wx.EVT_LISTBOX(self, 4, self.ip_selected)
         self.hosts = []
         self.get_ip_address()
@@ -70,6 +71,8 @@ def run_main_menu():
     app = wx.App()
     main_menu = panda_window(None, title='Main Selection')
     app.MainLoop()
+    if (panda_window_action == "none"):
+        return
     execfile("load_tester.py", {"panda_window_action" : panda_window_action, "panda_window_ip_address" : panda_window_ip_address})
 
 run_main_menu()
