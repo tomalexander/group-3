@@ -10,7 +10,7 @@ class Car():
     def __init__ (self, x=0, y=0, h=0):
         #mydir = os.path.abspath(sys.path[0])
         #mydir = Filename.fromOsSpecific(mydir).getFullpath()
-        self.model = loader.loadModel("models/car.egg")
+        self.model = loader.loadModel("cars/bluecar.egg")
         #self.model = Actor("models/panda-model")
         self.model.reparentTo(render)
         #self.model.setScale(.005)
