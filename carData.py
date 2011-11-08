@@ -24,13 +24,13 @@ class CarData(DirectObject):
         self.accept("arrow_right", self.setKey, [1,True])
         self.accept("arrow_up", self.setKey, [2,True])
         self.accept("arrow_down", self.setKey, [3,True])
-        self.accept("space", self.setKey, [4,True])
+        self.accept("lshift", self.setKey, [4,True])
         self.accept("arrow_left-up", self.setKey, [0,False])
         self.accept("arrow_right-up", self.setKey, [1,False])
         self.accept("arrow_up-up", self.setKey, [2,False])
         self.accept("arrow_down-up", self.setKey, [3,False])
-        self.accept("space-up", self.setKey, [4,False])
-        self.accept("lshift", self.toggleHeadlights)
+        self.accept("lshift-up", self.setKey, [4,False])
+        self.accept("space", self.toggleHeadlights)
         self.accept("hit-car", self.carCollision)
         
         base.cTrav = CollisionTraverser()
@@ -47,7 +47,7 @@ class CarData(DirectObject):
         self.carlist.append(newcar)
         if self.index >= 0 and self.index == len(self.carlist) - 1:
             tempvel = Velocity()
-            tempvel.setDM(newcar.model.getH(), -60)
+            tempvel.setDM(newcar.model.getH(), -75)
             camera.setPos(\
                 newcar.model.getX() + tempvel.x,\
                 newcar.model.getY() + tempvel.y,\
@@ -81,7 +81,7 @@ class CarData(DirectObject):
             #camera.lookAt(self.carlist[self.index].model)
             #camera.setP(camera.getP() + self.carlist[self.index].vel.getM()*10/2)
             tempvel = Velocity()
-            tempvel.setDM(self.carlist[self.index].model.getH(), -60 * MULCAM)
+            tempvel.setDM(self.carlist[self.index].model.getH(), -75 * MULCAM)
             tempvel.addDM(self.carlist[self.index].vel.getD(), self.carlist[self.index].vel.getM() * -10 / MULCAM)
             camera.setPos(\
                 self.carlist[self.index].model.getX() + tempvel.x,\
