@@ -110,5 +110,5 @@ class CarData(DirectObject):
                 self.collisionlist.append((second, first))
         elif secondString == "spikes":
             if int(firstString[3]) == self.index:
-                self.carData.carlist[self.index].takeDamage(25)
+                self.carlist[self.index].takeDamage(25)
             
