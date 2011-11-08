@@ -85,8 +85,9 @@ class Client(object):
             carInput = []
             for i in range(5):
                 carInput.append(myIterator.getBool())
+            carLights = myIterator.getBool()
             carHp = myIterator.getInt32()
-            self.updatePositions(playerNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carHp))
+            self.updatePositions(playerNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carLights, carHp))
         elif msgID == CAR_MESSAGE:
             carNum = myIterator.getUint8()
             if carNum != self.carData.index:
@@ -98,8 +99,9 @@ class Client(object):
                 carInput = []
                 for i in range(5):
                     carInput.append(myIterator.getBool())
+                carLights = myIterator.getBool()
                 carHp = myIterator.getInt32()
-                self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carHp))
+                self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carLights, carHp))
         elif msgID == COLLIDED_MESSAGE:
             collisionFrom = myIterator.getUint8()
             if collisionFrom == self.carData.index:
@@ -133,7 +135,8 @@ class Client(object):
             self.carData.carlist[carNum].vel.setXY(data[2], data[3])
             self.carData.carlist[carNum].model.setH(data[4])
             self.carData.carlist[carNum].input = data[5]
-            self.carData.carlist[carNum].hp = data[6]
+            self.carData.carlist[carNum].setHeadlights(data[6])
+            self.carData.carlist[carNum].hp = data[7]
         else:
             for i in range(len(self.carData.carlist), carNum+1):
                 self.carData.addCar()
@@ -141,7 +144,8 @@ class Client(object):
             self.carData.carlist[carNum].vel.setXY(data[2], data[3])
             self.carData.carlist[carNum].model.setH(data[4])
             self.carData.carlist[carNum].input = data[5]
-            self.carData.carlist[carNum].hp = data[6]
+            self.carData.carlist[carNum].setHeadlights(data[6])
+            self.carData.carlist[carNum].hp = data[7]
     
     def getPosDatagram(self):
         num = self.carData.index
@@ -158,6 +162,7 @@ class Client(object):
         newDatagram.addFloat32(self.carData.carlist[num].model.getH())
         for j in range(5):
             newDatagram.addBool(self.carData.carlist[num].input[j])
+        newDatagram.addBool(self.carData.carlist[num].lightsOn)
         newDatagram.addInt32(self.carData.carlist[num].hp)
         return newDatagram
     

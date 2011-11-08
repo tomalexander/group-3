@@ -102,8 +102,9 @@ class Network(object):
                 carInput = []
                 for i in range(5):
                     carInput.append(myIterator.getBool())
+                carLights = myIterator.getBool()
                 carHp = myIterator.getInt32()
-                self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carHp))
+                self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carLights, carHp))
         elif msgID == NEW_PLAYER_MESSAGE:
             self.cWriter.send(self.addNewCar(), netDatagram.getConnection())
             self.returnAllCars(netDatagram.getConnection())
@@ -133,7 +134,8 @@ class Network(object):
                 self.carData.carlist[carNum].vel.setXY(data[2], data[3])
                 self.carData.carlist[carNum].model.setH(data[4])
                 self.carData.carlist[carNum].input = data[5]
-                self.carData.carlist[carNum].hp = data[6]
+                self.carData.carlist[carNum].setHeadlights(data[6])
+                self.carData.carlist[carNum].hp = data[7]
         else:
             for i in range(len(self.carData.carlist), carNum+1):
                 self.carData.addCar()
@@ -141,7 +143,8 @@ class Network(object):
             self.carData.carlist[carNum].vel.setXY(data[2], data[3])
             self.carData.carlist[carNum].model.setH(data[4])
             self.carData.carlist[carNum].input = data[5]
-            self.carData.carlist[carNum].hp = data[6]
+            self.carData.carlist[carNum].setHeadlights(data[6])
+            self.carData.carlist[carNum].hp = data[7]
             
           
     def finalizeUpdates(self): #currently unused
@@ -175,7 +178,8 @@ class Network(object):
             newDatagram.addFloat32(float(data[j]))
         for j in range(5):
             newDatagram.addBool(data[5][j])
-        newDatagram.addInt32(data[6])
+        newDatagram.addBool(data[6])
+        newDatagram.addInt32(data[7])
         return newDatagram
     
     def getCarPosDatagramFromCar(self, num):
@@ -190,6 +194,7 @@ class Network(object):
         newDatagram.addFloat32(self.carData.carlist[num].model.getH())
         for j in range(5):
             newDatagram.addBool(self.carData.carlist[num].input[j])
+        newDatagram.addBool(self.carData.carlist[num].lightsOn)
         newDatagram.addInt32(self.carData.carlist[num].hp)
         return newDatagram
     
@@ -205,6 +210,7 @@ class Network(object):
         newDatagram.addFloat32(self.carData.carlist[num].model.getH())
         for j in range(5):
             newDatagram.addBool(self.carData.carlist[num].input[j])
+        newDatagram.addBool(self.carData.carlist[num].lightsOn)
         newDatagram.addInt32(self.carData.carlist[num].hp)
         return newDatagram
     
