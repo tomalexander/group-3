@@ -111,4 +111,7 @@ class CarData(DirectObject):
         elif secondString == "spikes":
             if int(firstString[3]) == self.index:
                 self.carlist[self.index].takeDamage(25)
+        elif secondString == "sticky":
+            self.carlist[self.index].vel.setDM(self.carlist[self.index].vel.getD(), self.carlist[self.index].vel.getM()/3)
+                
             
