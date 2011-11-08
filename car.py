@@ -30,7 +30,7 @@ class Car():
         self.setUpHeadlights()
     
     def makeCollisionSolid(self, cTrav, cHandler, num):
-        cSphere = CollisionSphere((0,0,0), 500)#because the panda is scaled way down, radius has to be huge
+        cSphere = CollisionSphere((0,0,0), 3)#because the panda is scaled way down, radius has to be huge
         cNode = CollisionNode("car%d"%num)
         cNode.addSolid(cSphere)
         cNodePath = self.model.attachNewNode(cNode)
@@ -46,7 +46,7 @@ class Car():
         lens.setNear(2.0)
         self.headlights.setLens(lens)
         slnp = self.model.attachNewNode(self.headlights)
-        slnp.setPos(0, -400, 0)
+        slnp.setPos(0, -0.35, 0)
         slnp.setHpr(0,0,0)
         render.setLight(slnp)
         self.lightsOn = True
