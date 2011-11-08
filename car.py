@@ -19,6 +19,7 @@ class Car():
         self.model.setPos(x, y, 0)
         self.model.setH(h)
         self.vel = Velocity()
+        self.turn = 0
         self.hp = 100
         self.input = [False for i in range(5)]#left, right, up, down, space
         
@@ -59,10 +60,9 @@ class Car():
     
     def move(self, elapsed):
         #all these numbers need to be tested
-        if self.input[0]:#left
-            self.model.setH(self.model.getH() + elapsed * 200)#maybe multiply by speed?
-        if self.input[1]:#right
-            self.model.setH(self.model.getH() - elapsed * 200)
+        
+        #position change
+        self.model.setPos(self.model.getX() + self.vel.x * elapsed/.02, self.model.getY() + self.vel.y * elapsed/.02, 0)
         tempmag = self.vel.getM()
         self.vel.addDM(self.model.getH(), elapsed * 1)
         self.vel.setDM(self.vel.getD(), tempmag)
@@ -74,5 +74,19 @@ class Car():
         if self.input[3]:#down
             self.vel.addDM(self.model.getH(), elapsed * -4)
             self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 4))#speed cap
-        self.model.setPos(self.model.getX() + self.vel.x, self.model.getY() + self.vel.y, 0)
+        
+        #turning
+        self.model.setH(self.model.getH() + self.turn * elapsed/.02)
+        if self.input[0]:#left
+            self.turn += elapsed * (100 + self.vel.getM()*100/4) / 4
+            self.turn = min(.02 * (100 + self.vel.getM()*100/4), self.turn)
+            #self.model.setH(self.model.getH() + elapsed * (100 + self.vel.getM()*100/4))
+        elif self.input[1]:#right
+            self.turn -= elapsed * (100 + self.vel.getM()*100/4) / 4
+            self.turn = max(-.02 * (100 + self.vel.getM()*100/4), self.turn)
+            #self.model.setH(self.model.getH() - elapsed * (100 + self.vel.getM()*100/4))
+        else:
+            self.turn -= math.copysign(elapsed, self.turn) * (100 + self.vel.getM()*100/4) / 4
+            if abs(self.turn) <= (elapsed * (100 + self.vel.getM()*100/4) / 4):
+                self.turn = 0
         
