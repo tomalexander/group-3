@@ -77,6 +77,9 @@ class Car():
                 self.headlights.setColor(VBase4(1, 1, 1, 1))
                 self.overlights.setColor(VBase4(1, 1, 1, 1))
                 self.lightsOn = True
+                
+    def takeDamage(self, num):
+        self.hp -= num
     
     def move(self, elapsed):
         #all these numbers need to be tested
