@@ -20,7 +20,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #WxPandaShell.__init__(self, fStartDirect=True) 
         #turn off default mouse control, otherwise can't reposition camera
         base.disableMouse()
-        camera.setPosHpr(0, -15, 7, 0, -15, 0)
+        #camera.setPosHpr(0, -15, 7, 0, -15, 0)
         self.loadModels()
         self.setupLights()
         self.setupCollisions()
