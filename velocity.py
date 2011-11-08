@@ -53,4 +53,5 @@ class Velocity():
         temp.setDM(D, 1)
         x = self.x * temp.x
         y = self.y * temp.y
-        return math.hypot(x, y)
+        return x + y
+        
