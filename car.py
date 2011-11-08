@@ -93,10 +93,10 @@ class Car():
             self.vel.setDM(self.vel.getD(), max(self.vel.getM() - (elapsed * (.5 + 2.5*self.input[4])),0))
         if self.input[2]:#up
             self.vel.addDM(self.model.getH(), elapsed * 4)
-            self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 4))#speed cap
+            self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 5))#speed cap
         if self.input[3]:#down
             self.vel.addDM(self.model.getH(), elapsed * -4)
-            self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 4))#speed cap
+            self.vel.setDM(self.vel.getD(), min(self.vel.getM(), 5))#speed cap
         
         #turning
         self.model.setH(self.model.getH() + self.turn * elapsed/.02)
