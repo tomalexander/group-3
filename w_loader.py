@@ -2,6 +2,7 @@ from terrain import terrain
 from tile import *
 from spike import *
 from sticky import *
+from piston import *
 
 class w_loader:
     def __init__(self):
@@ -31,6 +32,10 @@ class w_loader:
                 self.cell_list.append(new_cell)
             elif cell == 't':
                 new_cell = sticky(x_pos, y_pos)
+                new_cell.load_model()
+                self.cell_list.append(new_cell)
+            elif cell == 'p':
+                new_cell = piston(x_pos, y_pos)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
             else:
