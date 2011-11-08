@@ -18,7 +18,7 @@ world_loader.load_world(1)
 
 class World(DirectObject): #subclassing here is necessary to accept events
     def __init__(self):
-        #WxPandaShell.__init__(self, fStartDirect=True) 
+        #WxPandaShell.__init__(self, fStartDirect=True)
         #turn off default mouse control, otherwise can't reposition camera
         base.disableMouse()
         self.setupLights()
@@ -29,7 +29,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         #ambient light
         self.ambientLight = AmbientLight("ambientLight") #parameter is a name
         #four values, RGBA, Alpha is largely irrelevant, value [0,1]
-        self.ambientLight.setColor((.05, .05, .05, 1))
+        self.ambientLight.setColor((.04, .04, .04, 1))
         self.ambientLightNP = render.attachNewNode(self.ambientLight)
         #the nodepath that calls setLight is what gets illuminated by the light
         render.setLight(self.ambientLightNP)
