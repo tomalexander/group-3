@@ -6,6 +6,7 @@ from direct.interval.IntervalGlobal import *  #for compound intervals
 from direct.task import Task         #for update fuctions
 import sys, math, random
 from w_loader import w_loader
+from w_loader import spawn_locations
 from terrain import terrain
 from fog import *
 from smoke_emitter import *
@@ -41,12 +42,13 @@ w = World()
 game_fog()
 init_smoke()
 #smoke_emitter(w.panda, 0, 0, 500)
+global spawn_locations
 if panda_window_action == "host":
-    w.cars = CarData([(0,0), (0,5), (5,5), (5,0)], 0)
+    w.cars = CarData(spawn_locations, 0)
     w.connection = pythonServer.Network(w.cars)
     taskMgr.doMethodLater(10, ping_server_browser, 'ping_server_browser_daemon')
 elif panda_window_action == "connect":
     print "Made it to client creation"
-    w.cars = CarData([(0,0), (0,5), (5,5), (5,0)], -1)
+    w.cars = CarData(spawn_location, -1)
     w.connection = pythonClient.Client(w.cars, panda_window_ip_address)
 run()
