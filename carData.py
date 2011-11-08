@@ -9,6 +9,8 @@ from direct.actor.Actor import Actor#for animated models
 import sys, math
 import pythonServer
 
+MULCAM = 1.25
+
 class CarData(DirectObject):
     """Holds all the cars. All of them."""
     def __init__ (self, spos, index):#takes in a list of x,y tuples, there should be 4 of these
@@ -39,7 +41,7 @@ class CarData(DirectObject):
         self.carlist.append(newcar)
         if self.index >= 0 and self.index == len(self.carlist) - 1:
             tempvel = Velocity()
-            tempvel.setDM(newcar.model.getH(), -60)
+            tempvel.setDM(newcar.model.getH(), -60 * MULCAM)
             camera.setPos(\
                 newcar.model.getX() + tempvel.x,\
                 newcar.model.getY() + tempvel.y,\
@@ -70,12 +72,12 @@ class CarData(DirectObject):
             #camera.lookAt(self.carlist[self.index].model)
             #camera.setP(camera.getP() + self.carlist[self.index].vel.getM()*10/2)
             tempvel = Velocity()
-            tempvel.setDM(self.carlist[self.index].model.getH(), -60)
-            tempvel.addDM(self.carlist[self.index].vel.getD(), self.carlist[self.index].vel.getM() * -10)
+            tempvel.setDM(self.carlist[self.index].model.getH(), -60 * MULCAM)
+            tempvel.addDM(self.carlist[self.index].vel.getD(), self.carlist[self.index].vel.getM() * -10 / MULCAM)
             camera.setPos(\
                 self.carlist[self.index].model.getX() + tempvel.x,\
                 self.carlist[self.index].model.getY() + tempvel.y,\
-                self.carlist[self.index].model.getZ() + 40 + self.carlist[self.index].vel.getM() * -5)
+                self.carlist[self.index].model.getZ() + 40 + self.carlist[self.index].vel.getM() * -5 / MULCAM)
             camera.lookAt(self.carlist[self.index].model)
             camera.setP(camera.getP() + 5)
         
