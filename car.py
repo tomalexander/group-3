@@ -5,6 +5,7 @@ from direct.showbase.DirectObject import DirectObject#for event handling
 from direct.actor.Actor import Actor#for animated models
 import sys, os, math
 
+
 class Car():
     """This is a car."""
     def __init__ (self, x=0, y=0, h=0):
@@ -30,7 +31,7 @@ class Car():
         self.setUpHeadlights()
     
     def makeCollisionSolid(self, cTrav, cHandler, num):
-        cSphere = CollisionSphere((0,0,0), 3)#because the panda is scaled way down, radius has to be huge
+        cSphere = CollisionSphere((0,0,0), 3)
         cNode = CollisionNode("car%d"%num)
         cNode.addSolid(cSphere)
         cNodePath = self.model.attachNewNode(cNode)
@@ -40,7 +41,7 @@ class Car():
     
     def setUpHeadlights(self):
         self.headlights = Spotlight("headlights")
-        self.headlights.setColor(VBase4(1, 1, 1, 1))
+        self.headlights.setColor(VBase4(1.2, 1.2, 1.2, 1))
         lens = PerspectiveLens()
         lens.setFov(90, 90)
         lens.setNear(2.0)
@@ -49,15 +50,33 @@ class Car():
         slnp.setPos(0, -0.35, 0)
         slnp.setHpr(0,0,0)
         render.setLight(slnp)
+        self.overlights = DirectionalLight("overhead lights")
+        self.overlights.setColor(VBase4(1, 1, 1, 1))
+        oslnp = self.model.attachNewNode(self.overlights)
+        oslnp.setHpr(180,-75,0)
+        self.model.setLight(oslnp)
         self.lightsOn = True
     
     def toggleHeadlights(self):
         if self.lightsOn:
             self.headlights.setColor(VBase4(0, 0, 0, 1))
+            self.overlights.setColor(VBase4(0, 0, 0, 1))
             self.lightsOn = False
         else:
-            self.headlights.setColor(VBase4(1, 1, 1, 1))
+            self.headlights.setColor(VBase4(1.2, 1.2, 1.2, 1))
+            self.overlights.setColor(VBase4(1, 1, 1, 1))
             self.lightsOn = True
+    
+    def setHeadlights(self, val):
+        if val != self.lightsOn:
+            if self.lightsOn:
+                self.headlights.setColor(VBase4(0, 0, 0, 1))
+                self.overlights.setColor(VBase4(0, 0, 0, 1))
+                self.lightsOn = False
+            else:
+                self.headlights.setColor(VBase4(1, 1, 1, 1))
+                self.overlights.setColor(VBase4(1, 1, 1, 1))
+                self.lightsOn = True
     
     def move(self, elapsed):
         #all these numbers need to be tested
