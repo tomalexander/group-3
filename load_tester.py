@@ -11,6 +11,7 @@ from fog import *
 from smoke_emitter import *
 from carData import CarData
 import pythonServer, pythonClient
+from ping_server_browser import *
 
 world_loader = w_loader()
 world_loader.load_world(1)
@@ -173,6 +174,7 @@ smoke_emitter(w.panda, 0, 0, 500)
 if panda_window_action == "host":
     w.cars = CarData([(0,0), (0,5), (5,5), (5,0)], 0)
     w.connection = pythonServer.Network(w.cars)
+    taskMgr.doMethodLater(10, ping_server_browser, 'ping_server_browser_daemon')
 elif panda_window_action == "connect":
     print "Made it to client creation"
     w.cars = CarData([(0,0), (0,5), (5,5), (5,0)], -1)
