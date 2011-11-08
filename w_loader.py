@@ -6,6 +6,8 @@ from piston import *
 from pit import *
 from bumper import *
 
+spawn_locations = []
+
 class w_loader:
     def __init__(self):
         self.cell_height = 50
@@ -22,34 +24,42 @@ class w_loader:
             y_pos = y_pos + self.cell_height
 
     def handle_line(self, line, y_pos):
+        global spawn_locations
         x_pos = 0
         for cell in line:
-            if cell == '0':
+            if cell == 'l':#normal block
                 new_cell = tile(x_pos, y_pos, 0, self)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
-            elif cell == 's':
+            elif cell == 'v':#spike
                 new_cell = spike(x_pos, y_pos)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
-            elif cell == 't':
+            elif cell == 'r':#rumble
                 new_cell = sticky(x_pos, y_pos)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
-            elif cell == 'p':
+            elif cell == 'p':#piston
                 new_cell = piston(x_pos, y_pos)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
-            elif cell == 'i':
+            elif cell == '0':#empty
                 new_cell = pit(x_pos, y_pos)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
-            elif cell == 'b':
+            elif cell == 'b':#barrier
                 new_cell = bumper(x_pos, y_pos)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
-            else:
-                new_cell = terrain(x_pos, y_pos, 0, self)
+            elif cell == 's':#spawn
+                spawn_locations.append((x_pos + 25, y_pos + 25),)
+                print spawn_locations
+                new_cell = tile(x_pos, y_pos, 0, self)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
+            else:
+                pass
+                # new_cell = terrain(x_pos, y_pos, 0, self)
+                # new_cell.load_model()
+                # self.cell_list.append(new_cell)
             x_pos = x_pos + self.cell_width

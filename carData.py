@@ -43,8 +43,8 @@ class CarData(DirectObject):
         
     def addCar(self):
         pos = self.spos.pop()
-        newcar = Car(pos[0], pos[1], 0)
-        #newcar = Car(pos[0], pos[1], (math.degrees(math.atan2(15-pos[0], 15-pos[1]))-90)%360)
+        newcar = Car(pos[0], pos[1], (math.degrees(math.atan2(500-pos[0], 500-pos[1]))-90)%360)
+        #newcar = Car(pos[0], pos[1], (math.degrees(math.atan2(525-pos[0], 525-pos[1]))-90)%360)
         self.carlist.append(newcar)
         if self.index >= 0 and self.index == len(self.carlist) - 1:
             tempvel = Velocity()
@@ -73,14 +73,7 @@ class CarData(DirectObject):
         for car in self.carlist:
             car.move(elapsed)
         
-        #put in camera stuff car.x+ carvel.x*modify, similar for y , 2 + carvel.getM * modify
         if self.index >= 0 and self.index < len(self.carlist):
-            #camera.setPos(\
-            #    self.carlist[self.index].model.getX() - self.carlist[self.index].vel.x * 35,\
-            #    self.carlist[self.index].model.getY() - self.carlist[self.index].vel.y * 35,\
-            #    self.carlist[self.index].model.getZ() + 75 - self.carlist[self.index].vel.getM()*40/2)
-            #camera.lookAt(self.carlist[self.index].model)
-            #camera.setP(camera.getP() + self.carlist[self.index].vel.getM()*10/2)
             tempvel = Velocity()
             tempvel.setDM(self.carlist[self.index].model.getH(), -75 * MULCAM)
             tempvel.addDM(self.carlist[self.index].vel.getD(), self.carlist[self.index].vel.getM() * -10 / MULCAM)
