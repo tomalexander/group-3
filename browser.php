@@ -18,6 +18,11 @@ $ok = @sqlite_exec($db, $query, $error);
 if (!$ok && $error != "table hosts already exists")
    die("Cannot execute query. $error");
 
+//Delete expired entries
+$query = "DELETE FROM hosts WHERE time < " . ($time-$SERVER_TIMEOUT);
+$ok = sqlite_exec($db, $query, $error);
+if (!$ok) die("Cannot delete expired times" . $error);
+
 if ($action == "ping")
 {
     $query = "INSERT INTO hosts VALUES(\"" . $ip . "\", " . $time . ")";
@@ -34,7 +39,7 @@ if ($action == "gethosts")
     {
         while ($row = sqlite_fetch_array($result, SQLITE_ASSOC))
         {
-            if (!in_array($row["name"], $hosts) && $time - $row["time"] < $SERVER_TIMEOUT)
+            if (!in_array($row["name"], $hosts))
             {
                 echo $row["name"] . " ";
                 $hosts[] = $row["name"];
@@ -43,10 +48,6 @@ if ($action == "gethosts")
     }
 
 }
-
-$query = "DELETE FROM hosts WHERE time < " . $time-20;
-$ok = sqlite_exec($db, $query, $error);
-if (!$ok) die("Cannot delete expired times" . $error);
 
 sqlite_close($db);
 
