@@ -27,32 +27,32 @@ class w_loader:
         global spawn_locations
         x_pos = 0
         for cell in line:
-            if cell == 'l':
+            if cell == 'l':#normal block
                 new_cell = tile(x_pos, y_pos, 0, self)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
-            elif cell == 'v':
+            elif cell == 'v':#spike
                 new_cell = spike(x_pos, y_pos)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
-            elif cell == 'r':
+            elif cell == 'r':#rumble
                 new_cell = sticky(x_pos, y_pos)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
-            elif cell == 'p':
+            elif cell == 'p':#piston
                 new_cell = piston(x_pos, y_pos)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
-            elif cell == '0':
+            elif cell == '0':#empty
                 new_cell = pit(x_pos, y_pos)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
-            elif cell == 'b':
+            elif cell == 'b':#barrier
                 new_cell = bumper(x_pos, y_pos)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
-            elif cell == 's':
-                spawn_locations.append((x_pos, y_pos),)
+            elif cell == 's':#spawn
+                spawn_locations.append((x_pos + 25, y_pos + 25),)
                 print spawn_locations
                 new_cell = tile(x_pos, y_pos, 0, self)
                 new_cell.load_model()
