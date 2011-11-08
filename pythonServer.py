@@ -6,6 +6,7 @@ from direct.showbase.DirectObject import DirectObject  #for event handling
 from direct.actor.Actor import Actor #for animated models
 from direct.interval.IntervalGlobal import *  #for compound intervals
 from direct.task import Task         #for update fuctions
+import collisions
 import sys, math, random
 
 PRINT_MESSAGE = 1
@@ -28,7 +29,7 @@ class Network(object):
         self.carData.addCar()
         self.carData.index = 0
         self.carUpdates = [() for c in self.carData.carlist]
-        self.collisionData = []
+        self.ignore = []
         
         self.cManager = QueuedConnectionManager()
         self.cListener = QueuedConnectionListener(self.cManager, 0)
@@ -74,6 +75,10 @@ class Network(object):
                 self.cWriter.send(data, aClient)
             for data in collisionDatagrams:
                 self.cWriter.send(data, aClient)
+        for pair in self.carData.collisionlist:
+            if pair[0] < pair[1]:
+                collisions.collideCars(self.carData.carlist[pair[0]], self.carData.carlist[pair[1]])
+        self.carData.collisionlist = []
         self.clearCarData() #This is to prevent redundant messages from being sent
         return Task.cont
     
@@ -85,19 +90,27 @@ class Network(object):
             print messageToPrint
         elif msgID == CAR_MESSAGE:
             carNum = myIterator.getUint8()
-            carXpos = myIterator.getFloat32()
-            carYpos = myIterator.getFloat32()
-            carXvel = myIterator.getFloat32()
-            carYvel = myIterator.getFloat32()
-            carHeading = myIterator.getFloat32()
-            carInput = []
-            for i in range(5):
-                carInput.append(myIterator.getBool())
-            carHp = myIterator.getInt32()
-            self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carHp))
+            for num in self.ignore:
+                if num == carNum:
+                    break
+            else:
+                carXpos = myIterator.getFloat32()
+                carYpos = myIterator.getFloat32()
+                carXvel = myIterator.getFloat32()
+                carYvel = myIterator.getFloat32()
+                carHeading = myIterator.getFloat32()
+                carInput = []
+                for i in range(5):
+                    carInput.append(myIterator.getBool())
+                carHp = myIterator.getInt32()
+                self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carHp))
         elif msgID == NEW_PLAYER_MESSAGE:
             self.cWriter.send(self.addNewCar(), netDatagram.getConnection())
             self.returnAllCars(netDatagram.getConnection())
+        elif msgID == COLLIDED_MESSAGE:
+            print "Verified Collision"
+            carNum = myIterator.getUint8()
+            self.ignore.remove(carNum)
             
 
     def myNewPyDatagram(self):
@@ -197,12 +210,14 @@ class Network(object):
     
     def getCollisionDatagrams(self):
         myDatagrams = []
-        for data in self.collisionData:
+        for data in self.carData.collisionlist:
             newDatagram = PyDatagram()
             newDatagram.addUint8(COLLIDED_MESSAGE)
             newDatagram.addUint8(data[0])
             newDatagram.addUint8(data[1])
             myDatagrams.append(newDatagram)
+            if data[0] != 0:
+                self.ignore.append(data[0])
         return myDatagrams
     
     def returnAllCars(self, connection):

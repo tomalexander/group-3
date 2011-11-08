@@ -12,7 +12,9 @@ def collideCars(firstCar, secondCar):
     y = secondCar.model.getY() - firstCar.model.getY()
     angle = (math.degrees(math.atan2(y, x))-90) % 360
     firstM = firstCar.vel.getMInD(angle)
+    print firstM
     secondM = secondCar.vel.getMInD(angle)
+    print secondM
     firstCar.vel.addDM(angle, -firstM)
     firstCar.vel.addDM(angle, secondM)
     secondCar.vel.addDM(angle, firstM)

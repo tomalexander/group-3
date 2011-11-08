@@ -6,6 +6,7 @@ from direct.showbase.DirectObject import DirectObject  #for event handling
 from direct.actor.Actor import Actor #for animated models
 from direct.interval.IntervalGlobal import *  #for compound intervals
 from direct.task import Task         #for update fuctions
+import collisions
 import sys, math, random
 
 PRINT_MESSAGE = 1
@@ -99,10 +100,11 @@ class Client(object):
                     carInput.append(myIterator.getBool())
                 carHp = myIterator.getInt32()
                 self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carHp))
-        elif msgID == COLLISION_MESSAGE:
+        elif msgID == COLLIDED_MESSAGE:
             collisionFrom = myIterator.getUint8()
             if collisionFrom == self.carData.index:
                 self.doCarCollision(myIterator.getUint8())
+                self.cWriter.send(self.verifyCollisionMessage(), self.myConnection)
             
             
     def myNewPyDatagram(self):
@@ -116,6 +118,13 @@ class Client(object):
         # Send a request to join the game
         myPyDatagram = PyDatagram()
         myPyDatagram.addUint8(NEW_PLAYER_MESSAGE)
+        return myPyDatagram
+    
+    def verifyCollisionMessage(self):
+        # Send an acknowledgement of the collision
+        myPyDatagram = PyDatagram()
+        myPyDatagram.addUint8(COLLIDED_MESSAGE)
+        myPyDatagram.addUint8(self.carData.index)
         return myPyDatagram
     
     def updatePositions(self, carNum, data):
@@ -153,7 +162,7 @@ class Client(object):
         return newDatagram
     
     def doCarCollision(self, otherCarNum):
-        pass
+        collisions.collideCars(self.carData.carlist[self.carData.index], self.carData.carlist[otherCarNum])
 
 
 """

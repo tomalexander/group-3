@@ -17,6 +17,7 @@ class CarData(DirectObject):
         self.spos = spos
         self.index = index
         self.carlist = []
+        self.collisionlist = []
         
         self.accept("escape", sys.exit)
         self.accept("arrow_left", self.setKey, [0,True])
@@ -30,6 +31,11 @@ class CarData(DirectObject):
         self.accept("arrow_down-up", self.setKey, [3,False])
         self.accept("space-up", self.setKey, [4,False])
         self.accept("lshift", self.toggleHeadlights)
+        self.accept("hit-car", self.carCollision)
+        
+        base.cTrav = CollisionTraverser()
+        self.cHandler = CollisionHandlerEvent()
+        self.cHandler.setInPattern("hit-car")
         
         taskMgr.add(self.move, "outtaThaWayImDrivingHere")
         self.prevtime = 0
@@ -41,13 +47,16 @@ class CarData(DirectObject):
         self.carlist.append(newcar)
         if self.index >= 0 and self.index == len(self.carlist) - 1:
             tempvel = Velocity()
-            tempvel.setDM(newcar.model.getH(), -60 * MULCAM)
+            tempvel.setDM(newcar.model.getH(), -60)
             camera.setPos(\
                 newcar.model.getX() + tempvel.x,\
                 newcar.model.getY() + tempvel.y,\
                 newcar.model.getZ() + 40)
             camera.lookAt(newcar.model)
             camera.setP(camera.getP() + 5)
+            newcar.makeCollisionSolid(base.cTrav, self.cHandler, self.index)
+        elif self.index == 0:
+            newcar.makeCollisionSolid(base.cTrav, self.cHandler, len(self.carlist)-1)
         return newcar
         
     def setKey(self, ind, value):
@@ -83,3 +92,19 @@ class CarData(DirectObject):
         
         self.prevtime = task.time
         return Task.cont
+
+    def carCollision(self, cEntry):
+        firstString = cEntry.getFromNodePath().getName()
+        secondString = cEntry.getIntoNodePath().getName()
+        print firstString
+        print secondString
+        if secondString[:3] == "car":
+            first = int(firstString[3])
+            second = int(secondString[3])
+            print "CRASH!!!!"
+            for pair in self.collisionlist:
+                if pair[0] == first and pair[1] == second:
+                    break
+            else:
+                self.collisionlist.append((first, second))
+                self.collisionlist.append((second, first))

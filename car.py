@@ -29,14 +29,14 @@ class Car():
         
         self.setUpHeadlights()
     
-    def makeCollisionSolid(self, cTrav, cHandler):
+    def makeCollisionSolid(self, cTrav, cHandler, num):
         cSphere = CollisionSphere((0,0,0), 500)#because the panda is scaled way down, radius has to be huge
-        cNode = CollisionNode("car")
+        cNode = CollisionNode("car%d"%num)
         cNode.addSolid(cSphere)
         cNodePath = self.model.attachNewNode(cNode)
-        #cNodePath.show()
+        cNodePath.show()
         #registers a from object with the traverser with a corresponding handler
-        base.cTrav.addCollider(cNodePath, self.cHandler)
+        cTrav.addCollider(cNodePath, cHandler)
     
     def setUpHeadlights(self):
         self.headlights = Spotlight("headlights")
