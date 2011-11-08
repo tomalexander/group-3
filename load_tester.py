@@ -49,6 +49,6 @@ if panda_window_action == "host":
     taskMgr.doMethodLater(10, ping_server_browser, 'ping_server_browser_daemon')
 elif panda_window_action == "connect":
     print "Made it to client creation"
-    w.cars = CarData(spawn_location, -1)
+    w.cars = CarData(spawn_locations, -1)
     w.connection = pythonClient.Client(w.cars, panda_window_ip_address)
 run()
