@@ -8,6 +8,7 @@ from direct.task import Task#for update fuctions
 from direct.actor.Actor import Actor#for animated models
 import sys, math
 import pythonServer
+import collisions
 
 MULCAM = 1.25
 
@@ -113,5 +114,7 @@ class CarData(DirectObject):
                 self.carlist[self.index].takeDamage(25)
         elif secondString == "sticky":
             self.carlist[self.index].vel.setDM(self.carlist[self.index].vel.getD(), self.carlist[self.index].vel.getM()/3)
+        elif secondString == "bumper":
+            collisions.bumperCollision(self.carlist[int(firstString[3])], cEntry.getIntoNodePath().getParent())
                 
             
