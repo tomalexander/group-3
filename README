@@ -1,0 +1,3 @@
+This project is dependent on wxpython. Please install it at http://www.wxpython.org/download.php#stable
+
+To run the project, execute main_menu.py
