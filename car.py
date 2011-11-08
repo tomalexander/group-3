@@ -40,10 +40,11 @@ class Car():
         self.headlights = Spotlight("headlights")
         self.headlights.setColor(VBase4(1, 1, 1, 1))
         lens = PerspectiveLens()
-        lens.setFov(90, 60)
+        lens.setFov(90, 90)
+        lens.setNear(2.0)
         self.headlights.setLens(lens)
         slnp = self.model.attachNewNode(self.headlights)
-        slnp.setPos(0, 0, 0)
+        slnp.setPos(0, -400, 0)
         slnp.setHpr(0,0,0)
         render.setLight(slnp)
         self.lightsOn = True
