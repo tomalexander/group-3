@@ -34,6 +34,8 @@ class TempCarData(object):
 
 class Client(object):
     def __init__(self, cars, ip_address, playername):
+        self.carHitSound = base.loader.loadSfx("Sounds/CRASH2.wav")
+        
         self.playername = playername
         
         self.carData = cars
@@ -116,6 +118,7 @@ class Client(object):
         elif msgID == COLLIDED_MESSAGE:
             collisionFrom = myIterator.getUint8()
             if collisionFrom == self.carData.index:
+                self.carHitSound.play()
                 self.doCarCollision(myIterator.getUint8())
                 self.cWriter.send(self.verifyCollisionMessage(), self.myConnection)
         elif msgID == MAP_MESSAGE:
