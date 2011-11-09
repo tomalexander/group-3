@@ -8,10 +8,17 @@ import sys, os, math
 
 class Car():
     """This is a car."""
-    def __init__ (self, x=0, y=0, h=0):
+    def __init__ (self, x=0, y=0, h=0, car=0):
         #mydir = os.path.abspath(sys.path[0])
         #mydir = Filename.fromOsSpecific(mydir).getFullpath()
-        self.model = loader.loadModel("cars/bluecar.egg")
+        if car == 0:
+            self.model = loader.loadModel("cars/bluecar.egg")
+        elif car == 1:
+            self.model = loader.loadModel("cars/redcar.egg")
+        elif car == 2:
+            self.model = loader.loadModel("cars/greencar.egg")
+        else:
+            self.model = loader.loadModel("cars/yellowcar.egg")
         #self.model = Actor("models/panda-model")
         self.model.reparentTo(render)
         #self.model.setScale(.005)
@@ -23,6 +30,7 @@ class Car():
         self.vel = Velocity()
         self.turn = 0
         self.hp = 100
+        self.deaths = 0
         self.input = [False for i in range(5)]#left, right, up, down, space
         
         #taskMgr.add(self.move, "outtaThaWayImDrivingHere")
@@ -35,20 +43,25 @@ class Car():
         cNode = CollisionNode("car%d"%num)
         cNode.addSolid(cSphere)
         cNodePath = self.model.attachNewNode(cNode)
-        cNodePath.show()
+        #cNodePath.show()
         #registers a from object with the traverser with a corresponding handler
         cTrav.addCollider(cNodePath, cHandler)
     
     def setUpHeadlights(self):
         self.headlights = Spotlight("headlights")
         self.headlights.setColor(VBase4(1.2, 1.2, 1.2, 1))
+        #self.headlights.setShadowCaster(True, 512, 512)
+        self.headlights.setAttenuation(Point3(0.0001, 0, 0.00001))
+        print self.headlights.getAttenuation().getX()
+        print self.headlights.getAttenuation().getY()
+        print self.headlights.getAttenuation().getZ()
         lens = PerspectiveLens()
-        lens.setFov(90, 90)
+        lens.setFov(70, 90)
         lens.setNear(2.0)
         self.headlights.setLens(lens)
         slnp = self.model.attachNewNode(self.headlights)
-        slnp.setPos(0, -0.35, 0)
-        slnp.setHpr(0,0,0)
+        slnp.setPos(0, -0.35, 1)
+        slnp.setHpr(0,-2.5,0)
         render.setLight(slnp)
         self.overlights = DirectionalLight("overhead lights")
         self.overlights.setColor(VBase4(1, 1, 1, 1))

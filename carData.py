@@ -8,12 +8,18 @@ from direct.task import Task#for update fuctions
 from direct.actor.Actor import Actor#for animated models
 import sys, math
 import pythonServer
+import collisions
 
 MULCAM = 1.25
 
 class CarData(DirectObject):
     """Holds all the cars. All of them."""
     def __init__ (self, spos, index):#takes in a list of x,y tuples, there should be 4 of these
+        self.explosionSound = base.loader.loadSfx("Sounds/EXPLOSION.wav")
+        self.headlightSound = base.loader.loadSfx("Sounds/HEADLIGHTS.WAV")
+        self.rumbleSound = base.loader.loadSfx("Sounds/RUMBLE.wav")
+        self.spikeSound = base.loader.loadSfx("Sounds/SPIKE.wav")
+        
         self.spos = spos
         self.index = index
         self.carlist = []
@@ -41,12 +47,11 @@ class CarData(DirectObject):
         self.prevtime = 0
         
     def addCar(self):
-        pos = self.spos.pop()
-        newcar = Car(pos[0], pos[1], 0)
-        #newcar = Car(pos[0], pos[1], (math.degrees(math.atan2(15-pos[0], 15-pos[1]))-90)%360)
+        pos = self.spos[len(self.carlist) % len(self.spos)]
+        tempvel = Velocity(500 - pos[0], 500 - pos[1])
+        newcar = Car(pos[0], pos[1], tempvel.getD(), len(self.carlist)%4)
         self.carlist.append(newcar)
         if self.index >= 0 and self.index == len(self.carlist) - 1:
-            tempvel = Velocity()
             tempvel.setDM(newcar.model.getH(), -75)
             camera.setPos(\
                 newcar.model.getX() + tempvel.x,\
@@ -66,20 +71,24 @@ class CarData(DirectObject):
     def toggleHeadlights(self):
         if self.index >= 0 and self.index < len(self.carlist):
             self.carlist[self.index].toggleHeadlights()
+            self.headlightSound.play()
         
     def move(self, task):
         elapsed = task.time - self.prevtime
-        for car in self.carlist:
-            car.move(elapsed)
+        for i in range(len(self.carlist)):
+            self.carlist[i].move(elapsed)
+            if self.carlist[i].hp <= 0:
+                pos = self.spos[i%len(self.spos)]
+                self.carlist[i].model.setPos(pos[0], pos[1], 0)
+                tempvel = Velocity(500 - pos[0], 500 - pos[1])
+                self.carlist[i].model.setH(tempvel.getD())
+                self.carlist[i].vel.setXY(0,0)
+                self.carlist[i].deaths += 1
+                self.carlist[i].hp = 100
+                if i == self.index:
+                    self.explosionSound.play()
         
-        #put in camera stuff car.x+ carvel.x*modify, similar for y , 2 + carvel.getM * modify
         if self.index >= 0 and self.index < len(self.carlist):
-            #camera.setPos(\
-            #    self.carlist[self.index].model.getX() - self.carlist[self.index].vel.x * 35,\
-            #    self.carlist[self.index].model.getY() - self.carlist[self.index].vel.y * 35,\
-            #    self.carlist[self.index].model.getZ() + 75 - self.carlist[self.index].vel.getM()*40/2)
-            #camera.lookAt(self.carlist[self.index].model)
-            #camera.setP(camera.getP() + self.carlist[self.index].vel.getM()*10/2)
             tempvel = Velocity()
             tempvel.setDM(self.carlist[self.index].model.getH(), -75 * MULCAM)
             tempvel.addDM(self.carlist[self.index].vel.getD(), self.carlist[self.index].vel.getM() * -10 / MULCAM)
@@ -96,10 +105,10 @@ class CarData(DirectObject):
     def carCollision(self, cEntry):
         firstString = cEntry.getFromNodePath().getName()
         secondString = cEntry.getIntoNodePath().getName()
+        first = int(firstString[3])
         print firstString
         print secondString
         if secondString[:3] == "car":
-            first = int(firstString[3])
             second = int(secondString[3])
             print "CRASH!!!!"
             for pair in self.collisionlist:
@@ -109,9 +118,20 @@ class CarData(DirectObject):
                 self.collisionlist.append((first, second))
                 self.collisionlist.append((second, first))
         elif secondString == "spikes":
-            if int(firstString[3]) == self.index:
+            if first == self.index:
                 self.carlist[self.index].takeDamage(25)
+                self.spikeSound.play()
         elif secondString == "sticky":
-            self.carlist[self.index].vel.setDM(self.carlist[self.index].vel.getD(), self.carlist[self.index].vel.getM()/3)
+            self.carlist[first].vel.setDM(self.carlist[first].vel.getD(), min(self.carlist[first].vel.getM(), 5/3))
+            if first == self.index:
+                self.rumbleSound.play()
+        elif secondString == "boost":
+            self.carlist[first].vel.addDM(self.carlist[first].model.getH(), 5)
+            self.carlist[first].vel.setDM(self.carlist[first].vel.getD(), 5)
+        elif secondString == "bumper":
+            collisions.bumperCollision(self.carlist[first], cEntry.getIntoNodePath().getParent())
+        elif secondString == "pit":
+            if first == self.index:
+                self.carlist[self.index].takeDamage(125)
                 
             

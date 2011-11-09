@@ -26,4 +26,17 @@ def collideCars(firstCar, secondCar):
        firstCar.model.setPos(firstCar.model.getX() - dx + x, firstCar.model.getY() - dy + y)
 
 def bumperCollision(car, bumper):
-    pass
+    direction = bumper.getH()
+    if direction % 180 == 0:
+        if car.model.getX() > bumper.getX() + 25 or car.model.getX() < bumper.getX() - 25:
+            car.vel.x *= -1
+        else:
+            car.vel.y *= -1
+    elif direction % 180 == 90:
+        if car.model.getY() > bumper.getY() + 25 or car.model.getY() < bumper.getY() - 25:
+            car.vel.y *= -1
+        else:
+            car.vel.x *= -1
+    else:
+        car.vel.setDM(car.vel.getD(), car.vel.getM() * -1)
+    car.vel.setDM(car.vel.getD(), car.vel.getM()*3/4)
