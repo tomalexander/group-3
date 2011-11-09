@@ -16,7 +16,7 @@ from ping_server_browser import *
 
 global panda_window_settings
 
-
+set_panda_settings(panda_window_settings)
 
 class World(DirectObject): #subclassing here is necessary to accept events
     def __init__(self):
