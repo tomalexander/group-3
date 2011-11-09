@@ -113,7 +113,7 @@ class CarData(DirectObject):
             if int(firstString[3]) == self.index:
                 self.carlist[self.index].takeDamage(25)
         elif secondString == "sticky":
-            self.carlist[self.index].vel.setDM(self.carlist[self.index].vel.getD(), self.carlist[self.index].vel.getM()/3)
+            self.carlist[self.index].vel.setDM(self.carlist[self.index].vel.getD(), min(self.carlist[self.index].vel.getM(), 5/3))
         elif secondString == "bumper":
             collisions.bumperCollision(self.carlist[int(firstString[3])], cEntry.getIntoNodePath().getParent())
                 
