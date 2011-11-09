@@ -14,7 +14,8 @@ class smoke_emitter():
         self.parent = parent
         self.p = ParticleEffect()
         self.load_config('steam.ptf')
-        self.p.setScale(200)
+        self.p.setScale(2)
+        self.p.hide()
 
     def load_config(self, file_name):
         self.p.cleanup()

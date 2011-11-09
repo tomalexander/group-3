@@ -11,7 +11,7 @@ class boost(trap):
         self.model = loader.loadModel("models/booster.egg")
         self.model.reparentTo(render)
         self.model.setScale(5.7)
-        self.model.setPos(self.x+25, self.y+25, -28.5)
+        self.model.setPos(self.x, self.y, 0)
         self.set_up_collisions()
 
     def set_up_collisions(self):

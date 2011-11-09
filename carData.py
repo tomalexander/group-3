@@ -80,6 +80,12 @@ class CarData(DirectObject):
             for i in range(len(self.carlist)):
                 self.carlist[i].move(elapsed)
                 if self.carlist[i].hp <= 0:
+                    self.carlist[i].smoke3.p.hide()
+                    self.carlist[i].smoke2.p.hide()
+                    self.carlist[i].smoke1.p.hide()
+                    self.carlist[i].s1 = False
+                    self.carlist[i].s2 = False
+                    self.carlist[i].s3 = False
                     pos = self.spos[i%len(self.spos)]
                     self.carlist[i].model.setPos(pos[0], pos[1], 0)
                     tempvel = Velocity(500 - pos[0], 500 - pos[1])

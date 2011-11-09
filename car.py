@@ -4,7 +4,7 @@ from pandac.PandaModules import *#basic Panda modules
 from direct.showbase.DirectObject import DirectObject#for event handling
 from direct.actor.Actor import Actor#for animated models
 import sys, os, math
-
+from smoke_emitter import *
 
 class Car():
     """This is a car."""
@@ -32,6 +32,16 @@ class Car():
         self.hp = 100
         self.deaths = 0
         self.input = [False for i in range(5)]#left, right, up, down, space
+
+        #Attach Smoke
+        self.s1 = False
+        self.s2 = False
+        self.s3 = False
+        self.smoke1 = smoke_emitter(self.model, 1, 1, 1)
+        self.smoke2 = smoke_emitter(self.model, -1, 0, 1)
+        self.smoke3 = smoke_emitter(self.model, 0, 1, 0)
+        
+        
         
         #taskMgr.add(self.move, "outtaThaWayImDrivingHere")
         #self.prevtime = 0
@@ -96,6 +106,18 @@ class Car():
     
     def move(self, elapsed):
         #all these numbers need to be tested
+        if self.hp < 25 and not self.s3:
+            self.smoke3.p.show()
+            self.s3 = True
+            print "BAD"
+        if self.hp < 50 and not self.s2:
+            self.smoke2.p.show()
+            self.s2 = True
+            print "MEDIUM"
+        if self.hp < 75 and not self.s1:
+            self.smoke1.p.show()
+            self.s1 = True
+            print "GOD"
         
         #position change
         self.model.setPos(self.model.getX() + self.vel.x * elapsed/.02, self.model.getY() + self.vel.y * elapsed/.02, 0)
