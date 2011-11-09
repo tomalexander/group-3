@@ -5,6 +5,7 @@ from sticky import *
 from piston import *
 from pit import *
 from bumper import *
+from boost import *
 
 spawn_locations = []
 
@@ -48,6 +49,10 @@ class w_loader:
                 self.cell_list.append(new_cell)
             elif cell == 'r':#rumble
                 new_cell = sticky(x_pos, y_pos)
+                new_cell.load_model()
+                self.cell_list.append(new_cell)
+            elif cell == '+':#boost
+                new_cell = boost(x_pos, y_pos)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
             elif cell == 'p':#piston

@@ -97,10 +97,10 @@ class CarData(DirectObject):
     def carCollision(self, cEntry):
         firstString = cEntry.getFromNodePath().getName()
         secondString = cEntry.getIntoNodePath().getName()
+        first = int(firstString[3])
         print firstString
         print secondString
         if secondString[:3] == "car":
-            first = int(firstString[3])
             second = int(secondString[3])
             print "CRASH!!!!"
             for pair in self.collisionlist:
@@ -110,14 +110,17 @@ class CarData(DirectObject):
                 self.collisionlist.append((first, second))
                 self.collisionlist.append((second, first))
         elif secondString == "spikes":
-            if int(firstString[3]) == self.index:
+            if first == self.index:
                 self.carlist[self.index].takeDamage(25)
         elif secondString == "sticky":
-            self.carlist[self.index].vel.setDM(self.carlist[self.index].vel.getD(), min(self.carlist[self.index].vel.getM(), 5/3))
+            self.carlist[first].vel.setDM(self.carlist[first].vel.getD(), min(self.carlist[first].vel.getM(), 5/3))
+        elif secondString == "boost":
+            self.carlist[first].vel.addDM(self.carlist[first].model.getH(), 5)
+            self.carlist[first].vel.setDM(self.carlist[first].vel.getD(), 5)
         elif secondString == "bumper":
-            collisions.bumperCollision(self.carlist[int(firstString[3])], cEntry.getIntoNodePath().getParent())
+            collisions.bumperCollision(self.carlist[first], cEntry.getIntoNodePath().getParent())
         elif secondString == "pit":
-            if int(firstString[3]) == self.index:
+            if first == self.index:
                 self.carlist[self.index].takeDamage(125)
                 
             
