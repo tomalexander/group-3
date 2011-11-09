@@ -16,6 +16,8 @@ from ping_server_browser import *
 
 global panda_window_settings
 
+set_panda_settings(panda_window_settings)
+
 world_loader = w_loader()
 world_loader.load_world(panda_window_settings["selected_map"])
 

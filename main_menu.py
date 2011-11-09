@@ -243,12 +243,18 @@ class panda_window(wx.Frame):
         self.hosts = []
         response = urllib2.urlopen('http://ip.paphus.com/browser.php?action=gethosts')
         ip = response.read()
-        self.hosts = [i for i in ip.split(" ") if i != ""]
-        self.server_list.Set(self.hosts)
+        self.hosts = [i for i in ip.split(";") if i != ""]
+        self.display_hosts = []
+        self.ip_hosts = []
+        for x in self.hosts:
+            cut_up = x.split("~")
+            self.ip_hosts.append(cut_up[0])
+            self.display_hosts.append(cut_up[1])
+        self.server_list.Set(self.display_hosts)
 
     def ip_selected(self, event):
-        self.text_ip.SetValue(self.hosts[self.server_list.GetSelection()])
-        self.host_text_ip.SetValue(self.hosts[self.server_list.GetSelection()])
+        self.text_ip.SetValue(self.ip_hosts[self.server_list.GetSelection()])
+        self.host_text_ip.SetValue(self.ip_hosts[self.server_list.GetSelection()])
 
     def update_map_list(self):
         self.maps = map(strip_txt, os.listdir("worlds/"))
