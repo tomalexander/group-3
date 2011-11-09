@@ -109,15 +109,12 @@ class Car():
         if self.hp < 25 and not self.s3:
             self.smoke3.p.show()
             self.s3 = True
-            print "BAD"
         if self.hp < 50 and not self.s2:
             self.smoke2.p.show()
             self.s2 = True
-            print "MEDIUM"
         if self.hp < 75 and not self.s1:
             self.smoke1.p.show()
             self.s1 = True
-            print "GOD"
         
         #position change
         self.model.setPos(self.model.getX() + self.vel.x * elapsed/.02, self.model.getY() + self.vel.y * elapsed/.02, 0)
