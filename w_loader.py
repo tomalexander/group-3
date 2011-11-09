@@ -1,5 +1,6 @@
 from terrain import terrain
 from tile import *
+from edge_tile import *
 from spike import *
 from sticky import *
 from piston import *
@@ -49,6 +50,10 @@ class w_loader:
         for cell in line:
             if cell == 'l':#normal block
                 new_cell = tile(x_pos, y_pos, 0, self)
+                new_cell.load_model()
+                self.cell_list.append(new_cell)
+            elif cell == 'e':#edge block
+                new_cell = edge_tile(x_pos, y_pos, 0, self)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
             elif cell == 'v':#spike
