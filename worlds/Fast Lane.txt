@@ -1,9 +1,9 @@
 eeeeeeeeeeeeeeeeeeee
 e+llllslllllslllll+e
-elll___lllll___lllle
-elll[lllllllll]lllle
-elll[lllllllll]lllle
-elll[l+lllll+l]lllle
+elll___llllll___llle
+elll[llllllllll]llle
+elll[llllllllll]llle
+elll[l+llllll+l]llle
 elllllllllllllllllle
 elllllllllllllllllle
 ellllllllrrlllllllle
