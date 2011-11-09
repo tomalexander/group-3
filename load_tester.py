@@ -14,8 +14,10 @@ from carData import CarData
 import pythonServer, pythonClient
 from ping_server_browser import *
 
+global panda_window_settings
+
 world_loader = w_loader()
-world_loader.load_world(1)
+world_loader.load_world(panda_window_settings["selected_map"])
 
 class World(DirectObject): #subclassing here is necessary to accept events
     def __init__(self):
@@ -36,19 +38,17 @@ class World(DirectObject): #subclassing here is necessary to accept events
         render.setLight(self.ambientLightNP)
         #call clearLight() to turn it off
         
-global panda_window_action, panda_window_ip_address
-print panda_window_action, panda_window_ip_address
 w = World()
 game_fog()
 init_smoke()
 #smoke_emitter(w.panda, 0, 0, 500)
 global spawn_locations
-if panda_window_action == "host":
+if panda_window_settings["action"] == "host":
     w.cars = CarData(spawn_locations, 0)
     w.connection = pythonServer.Network(w.cars)
     taskMgr.doMethodLater(10, ping_server_browser, 'ping_server_browser_daemon')
-elif panda_window_action == "connect":
+elif panda_window_settings["action"] == "join":
     print "Made it to client creation"
     w.cars = CarData(spawn_locations, -1)
-    w.connection = pythonClient.Client(w.cars, panda_window_ip_address)
+    w.connection = pythonClient.Client(w.cars, panda_window_settings["ip"])
 run()

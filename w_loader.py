@@ -16,7 +16,7 @@ class w_loader:
         self.cell_list = []
 
     def load_world(self, world_number):
-        file_name = "worlds/world" + str(world_number) + ".txt"
+        file_name = "worlds/" + world_number + ".txt"
         file_handle = open(file_name, 'r')
         y_pos = 950
         for full_line in file_handle:
