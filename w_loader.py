@@ -62,6 +62,25 @@ class w_loader:
                 new_cell = bumper(x_pos, y_pos)
                 new_cell.load_model()
                 self.cell_list.append(new_cell)
+            elif cell == '_':#barrier
+                new_cell = bumper(x_pos, y_pos)
+                new_cell.load_model()
+                self.cell_list.append(new_cell)
+            elif cell == '-':#barrier
+                new_cell = bumper(x_pos, y_pos)
+                new_cell.load_model()
+                new_cell.model.setH(180)
+                self.cell_list.append(new_cell)
+            elif cell == '[':#barrier
+                new_cell = bumper(x_pos, y_pos)
+                new_cell.load_model()
+                new_cell.model.setH(270)
+                self.cell_list.append(new_cell)
+            elif cell == ']':#barrier
+                new_cell = bumper(x_pos, y_pos)
+                new_cell.load_model()
+                new_cell.model.setH(90)
+                self.cell_list.append(new_cell)
             elif cell == 's':#spawn
                 spawn_locations.append((x_pos + 25, y_pos + 25),)
                 print spawn_locations
