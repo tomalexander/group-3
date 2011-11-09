@@ -116,5 +116,8 @@ class CarData(DirectObject):
             self.carlist[self.index].vel.setDM(self.carlist[self.index].vel.getD(), min(self.carlist[self.index].vel.getM(), 5/3))
         elif secondString == "bumper":
             collisions.bumperCollision(self.carlist[int(firstString[3])], cEntry.getIntoNodePath().getParent())
+        elif secondString == "pit":
+            if int(firstString[3]) == self.index:
+                self.carlist[self.index].takeDamage(125)
                 
             
