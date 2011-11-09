@@ -209,23 +209,20 @@ class panda_window(wx.Frame):
     def join_start_game(self, event):
         global panda_window_settings
         panda_window_settings["action"] = "join"
-        file_handle = open("username.txt", 'w')
-        file_handle.write(self.text_name.GetValue())
-        file_handle.close()
         self.start_game()
 
     def host_start_game(self, event):
         global panda_window_settings
         panda_window_settings["action"] = "host"
-        file_handle = open("username.txt", 'w')
-        file_handle.write(self.host_text_name.GetValue())
-        file_handle.close()
         self.start_game()
 
     def start_game(self):
         global panda_window_settings
         panda_window_settings["ip"] = self.text_ip.GetValue()
         panda_window_settings["player_name"] = self.text_name.GetValue()
+        file_handle = open("username.txt", 'w')
+        file_handle.write(self.text_name.GetValue())
+        file_handle.close()
         panda_window_settings["selected_map"] = self.maps[self.map_list.GetSelection()]
         panda_window_settings["game_time"] = int(self.host_text_time.GetValue())
         panda_window_settings["num_players"] = self.host_players.GetSelection()+1
