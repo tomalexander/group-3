@@ -87,6 +87,7 @@ class Client(object):
         elif msgID == PLAYER_ASSIGNMENT_MESSAGE:
             playerNum = myIterator.getUint8()
             self.carData.index = playerNum
+            self.playername += " (%d)"%playerNum
             carXpos = myIterator.getFloat32()
             carYpos = myIterator.getFloat32()
             carXvel = myIterator.getFloat32()

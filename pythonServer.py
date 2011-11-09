@@ -42,6 +42,7 @@ class Network(object):
         self.map = map
         self.players = players
         self.playername = playername
+        self.playername += " (0)"
         self.playerscores = []
         self.timer = -1
         
