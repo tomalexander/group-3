@@ -47,12 +47,15 @@ class panda_window(wx.Frame):
 
         #row 1
         self.join_hbox1 = wx.BoxSizer(wx.HORIZONTAL)
-        #self.image_title = wx.Image("images/menu.png", wx.BITMAP_TYPE_PNG)
+        self.image_title = wx.StaticBitmap(self.join_panel)
+        self.image_title.SetBitmap(wx.Image("images/menu.png", wx.BITMAP_TYPE_PNG).Rescale(550,160).ConvertToBitmap())
+        #self.image_title = wx.Image("images/menu.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        #self.join_panel.setBitmap(wx.Image("images/menu.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap())
         #self.label_title = wx.StaticText(self.join_panel, label="Rezolution")
         #self.label_title.SetFont(wx.Font(20, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         self.button_host = wx.Button(self.join_panel, 2, label="Host")
-        #self.join_hbox1.Add(self.image_title, 3, wx.TOP | wx.LEFT | wx.EXPAND, 10)
-        self.join_hbox1.Add(self.button_host, 1, wx.TOP | wx.RIGHT, 10)
+        self.join_hbox1.Add(self.image_title, 3, wx.TOP | wx.LEFT | wx.EXPAND, 10)
+        self.join_hbox1.Add(self.button_host, 1, wx.TOP, 70)
 
         #row 2
         self.join_hbox2 = wx.BoxSizer(wx.HORIZONTAL)
