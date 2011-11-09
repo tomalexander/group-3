@@ -8,7 +8,7 @@ class boost(trap):
         trap.__init__(self, _x, _y, "boost")
 
     def load_model(self):
-        self.model = loader.loadModel("models/sticky.egg")
+        self.model = loader.loadModel("models/booster.egg")
         self.model.reparentTo(render)
         self.model.setScale(5.7)
         self.model.setPos(self.x+25, self.y+25, -28.5)
