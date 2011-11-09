@@ -38,6 +38,7 @@ class panda_window(wx.Frame):
         self.init_host_ui()
         self.update_map_list()
         self.get_ip_address()
+        self.load_username()
         
 
 
@@ -203,11 +204,17 @@ class panda_window(wx.Frame):
     def join_start_game(self, event):
         global panda_window_settings
         panda_window_settings["action"] = "join"
+        file_handle = open("username.txt", 'w')
+        file_handle.write(self.text_name.GetValue())
+        file_handle.close()
         self.start_game()
 
     def host_start_game(self, event):
         global panda_window_settings
         panda_window_settings["action"] = "host"
+        file_handle = open("username.txt", 'w')
+        file_handle.write(self.host_text_name.GetValue())
+        file_handle.close()
         self.start_game()
 
     def start_game(self):
@@ -251,8 +258,10 @@ class panda_window(wx.Frame):
 
     def load_username(self):
         file_handle = open("username.txt", 'r')
-        name = file_handle.readline()
-        
+        name = file_handle.readline().strip()
+        self.text_name.SetValue(name)
+        self.host_text_name.SetValue(name)
+        file_handle.close()
     
 def strip_txt(inp):
     if (inp[-4:] == ".txt"):
