@@ -3,8 +3,6 @@ import socket
 import urllib2
 import os
 import sys
-if getattr(sys, "getwindowsversion", None) is not None:
-    import winsound
 
 panda_window_settings = {}
 panda_window_settings["action"] = "none"
@@ -24,8 +22,6 @@ class panda_window(wx.Frame):
         self.init_ui()
         self.Show()
         self.Centre()
-        if getattr(sys, "getwindowsversion", None) is not None:
-            winsound.PlaySound("Sound/music.wav", winsound.SND_LOOP | winsound.SND_ASYNC)
 
     def init_ui(self):
         self.main_panel = wx.Panel(self)
