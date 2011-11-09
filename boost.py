@@ -15,7 +15,7 @@ class boost(trap):
         self.set_up_collisions()
 
     def set_up_collisions(self):
-        self.collision_sphere = CollisionSphere((0,0,0), 6.5)
+        self.collision_sphere = CollisionSphere((4.3,4.3,0), 4)
         self.collision_node = CollisionNode("boost")
         self.collision_node.addSolid(self.collision_sphere)
         self.collision_node_path = self.model.attachNewNode(self.collision_node)
