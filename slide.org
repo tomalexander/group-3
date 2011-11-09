@@ -1,0 +1,27 @@
+#+TITLE:     Rezolution
+#+AUTHOR:
+#+EMAIL:    
+#+DATE:     
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME: 
+#+startup: beamer
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [Huge]
+#+BEAMER_FRAME_LEVEL: 1
+#+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
+#+latex_header: \mode<beamer>{\usetheme{Madrid}}
+** Set Up
+- Rezolution is an online multiplayer game. We invite the class to join us.
+- The installer is located at =http://paphus.com/setup.exe=
+- The installer will install to your home directory by default (ex: =C:/users/bob=). The installer will not place shortcuts for you.
+- *AT SOME POINT IN THIS PROCESS THE WxPYTHON INSTALL WILL POP UP. FOR THE LOVE OF GOD, INSTALL IT TO THE SAME PYTHON THAT YOU RUN PANDA3D WITH*
+- You *do* need Panda3D to run this
+- To run the game, execute =main_menu.py= in the same fashion you execute any Panda3D code
