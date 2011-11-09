@@ -110,11 +110,11 @@ class panda_window(wx.Frame):
 
         #row 1
         self.host_hbox1 = wx.BoxSizer(wx.HORIZONTAL)
-        self.host_label_title = wx.StaticText(self.host_panel, label="Rezolution")
-        self.host_label_title.SetFont(wx.Font(20, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
+        self.host_image_title = wx.StaticBitmap(self.host_panel)
+        self.host_image_title.SetBitmap(wx.Image("images/menu.png", wx.BITMAP_TYPE_PNG).Rescale(550,160).ConvertToBitmap())
         self.button_host = wx.Button(self.host_panel, 5, label="Join")
-        self.host_hbox1.Add(self.host_label_title, 3, wx.TOP | wx.LEFT | wx.EXPAND, 10)
-        self.host_hbox1.Add(self.button_host, 1, wx.TOP | wx.RIGHT, 10)
+        self.host_hbox1.Add(self.host_image_title, 3, wx.TOP | wx.LEFT | wx.EXPAND, 10)
+        self.host_hbox1.Add(self.button_host, 1, wx.TOP, 70)
 
         #row 2
         self.host_hbox2 = wx.BoxSizer(wx.HORIZONTAL)
@@ -165,7 +165,7 @@ class panda_window(wx.Frame):
         self.host_hbox7.Add(self.host_start_button, 0, wx.LEFT | wx.TOP, 0)
 
         #rack em up
-        self.host_vbox.Add(self.host_hbox1, 1, wx.ALL | wx.EXPAND, 10)
+        self.host_vbox.Add(self.host_hbox1, 0, wx.ALL | wx.EXPAND, 10)
         self.host_vbox.Add(self.host_hbox2, 1, wx.ALL | wx.EXPAND, 10)
         self.host_vbox.Add(self.host_hbox4, 1, wx.ALL | wx.EXPAND, 10)
         self.host_vbox.Add(self.host_hbox5, 1, wx.ALL | wx.EXPAND, 10)
