@@ -15,6 +15,11 @@ MULCAM = 1.25
 class CarData(DirectObject):
     """Holds all the cars. All of them."""
     def __init__ (self, spos, index):#takes in a list of x,y tuples, there should be 4 of these
+        self.explosionSound = base.loader.loadSfx("Sounds/EXPLOSION.wav")
+        self.headlightSound = base.loader.loadSfx("Sounds/HEADLIGHTS.WAV")
+        self.rumbleSound = base.loader.loadSfx("Sounds/RUMBLE.wav")
+        self.spikeSound = base.loader.loadSfx("Sounds/SPIKE.wav")
+        
         self.spos = spos
         self.index = index
         self.carlist = []
@@ -66,6 +71,7 @@ class CarData(DirectObject):
     def toggleHeadlights(self):
         if self.index >= 0 and self.index < len(self.carlist):
             self.carlist[self.index].toggleHeadlights()
+            self.headlightSound.play()
         
     def move(self, task):
         elapsed = task.time - self.prevtime
@@ -79,6 +85,8 @@ class CarData(DirectObject):
                 self.carlist[i].vel.setXY(0,0)
                 self.carlist[i].deaths += 1
                 self.carlist[i].hp = 100
+                if i == self.index:
+                    self.explosionSound.play()
         
         if self.index >= 0 and self.index < len(self.carlist):
             tempvel = Velocity()
@@ -112,8 +120,11 @@ class CarData(DirectObject):
         elif secondString == "spikes":
             if first == self.index:
                 self.carlist[self.index].takeDamage(25)
+                self.spikeSound.play()
         elif secondString == "sticky":
             self.carlist[first].vel.setDM(self.carlist[first].vel.getD(), min(self.carlist[first].vel.getM(), 5/3))
+            if first == self.index:
+                self.rumbleSound.play()
         elif secondString == "boost":
             self.carlist[first].vel.addDM(self.carlist[first].model.getH(), 5)
             self.carlist[first].vel.setDM(self.carlist[first].vel.getD(), 5)
