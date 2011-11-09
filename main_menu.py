@@ -35,6 +35,7 @@ class panda_window(wx.Frame):
         
         self.init_join_ui()
         self.init_host_ui()
+        self.update_map_list()
         self.get_ip_address()
         
 
@@ -76,7 +77,8 @@ class panda_window(wx.Frame):
         wx.EVT_BUTTON(self, 3, self._update_host_list)
         self.button_start = wx.Button(self.join_panel, 4, label="Start")
         wx.EVT_BUTTON(self, 4, self.join_start_game)
-        self.server_list = wx.ListBox(self.join_panel, id=4)
+        self.server_list = wx.ListBox(self.join_panel, id=7)
+        wx.EVT_LISTBOX(self, 7, self.ip_selected)
         self.join_vbox1.Add(self.label_running, 1, wx.ALL | wx.EXPAND, 5)
         self.join_vbox1.Add(self.button_refresh, 1, wx.ALL | wx.EXPAND, 5)
         self.join_vbox1.Add(self.button_start, 1, wx.ALL | wx.EXPAND, 5)
@@ -153,6 +155,7 @@ class panda_window(wx.Frame):
         #row 7
         self.host_hbox7 = wx.BoxSizer(wx.HORIZONTAL)
         self.host_start_button = wx.Button(self.host_panel, 10, label="Start")
+        wx.EVT_BUTTON(self, 10, self.host_start_game)
         self.host_hbox7.Add(self.host_start_button, 0, wx.LEFT | wx.TOP, 0)
 
         #rack em up
@@ -197,22 +200,28 @@ class panda_window(wx.Frame):
         self.host_text_ip.SetValue(ip)
 
     def join_start_game(self, event):
+        global panda_window_settings
+        panda_window_settings["action"] = "join"
+        self.start_game()
+
+    def host_start_game(self, event):
+        global panda_window_settings
+        panda_window_settings["action"] = "host"
         self.start_game()
 
     def start_game(self):
+        global panda_window_settings
+        panda_window_settings["ip"] = self.text_ip.GetValue()
+        panda_window_settings["player_name"] = self.text_name.GetValue()
+        panda_window_settings["selected_map"] = self.maps[self.map_list.GetSelection()]
+        panda_window_settings["game_time"] = int(self.host_text_time.GetValue())
         self.Close(True)
         self.Destroy()
 
     def click_host(self, event):
         global panda_window_action
         panda_window_action = "host"
-        self.start_game()
-
-    def click_connect(self, event):
-        global panda_window_action
-        global panda_window_ip_address
-        panda_window_ip_address = self.text_ip_address.GetValue()
-        panda_window_action = "connect"
+        self.get_ip_address()
         self.start_game()
 
     def click_refresh(self, event):
@@ -229,7 +238,8 @@ class panda_window(wx.Frame):
         self.server_list.Set(self.hosts)
 
     def ip_selected(self, event):
-        self.text_ip_address.SetValue(self.hosts[self.server_list.GetSelection()])
+        self.text_ip.SetValue(self.hosts[self.server_list.GetSelection()])
+        self.host_text_ip.SetValue(self.hosts[self.server_list.GetSelection()])
 
     def update_map_list(self):
         self.maps = map(strip_txt, os.listdir("worlds/"))
@@ -250,6 +260,6 @@ def run_main_menu():
     app.MainLoop()
     if (panda_window_settings["action"] == "none"):
         return
-    #execfile("load_tester.py", {"panda_window_action" : panda_window_action, "panda_window_ip_address" : panda_window_ip_address})
+    execfile("load_tester.py", {"panda_window_settings" : panda_window_settings})
 
 run_main_menu()
