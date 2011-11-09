@@ -71,11 +71,12 @@ class CarData(DirectObject):
         elapsed = task.time - self.prevtime
         for i in range(len(self.carlist)):
             self.carlist[i].move(elapsed)
-            if self.carlist[i].hp < 0:
+            if self.carlist[i].hp <= 0:
                 pos = self.spos[i%len(self.spos)]
                 self.carlist[i].model.setPos(pos[0], pos[1], 0)
-                self.carlist[i].model.setH((math.degrees(math.atan2(500-pos[0], 500-pos[1]))-90)%360)
-                self.carlist[i].vel.setDM(0,0)
+                tempvel = Velocity(500 - pos[0], 500 - pos[1])
+                self.carlist[i].model.setH(tempvel.getD())
+                self.carlist[i].vel.setXY(0,0)
                 self.carlist[i].deaths += 1
                 self.carlist[i].hp = 100
         
