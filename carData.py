@@ -19,6 +19,8 @@ class CarData(DirectObject):
         self.headlightSound = base.loader.loadSfx("Sounds/HEADLIGHTS.WAV")
         self.rumbleSound = base.loader.loadSfx("Sounds/RUMBLE.wav")
         self.spikeSound = base.loader.loadSfx("Sounds/SPIKE.wav")
+        self.boostSound = base.loader.loadSfx("Sounds/BOOST.wav")
+        self.bumperSound = base.loader.loadSfx("Sounds/CRASH4.wav")
         
         self.spos = spos
         self.index = index
@@ -136,8 +138,12 @@ class CarData(DirectObject):
         elif secondString == "boost":
             self.carlist[first].vel.addDM(self.carlist[first].model.getH(), 5)
             self.carlist[first].vel.setDM(self.carlist[first].vel.getD(), 5)
+            if first == self.index:
+                self.boostSound.play()
         elif secondString == "bumper":
             collisions.bumperCollision(self.carlist[first], cEntry.getIntoNodePath().getParent())
+            if first == self.index:
+                self.bumperSound.play()
         elif secondString == "pit":
             if first == self.index:
                 self.carlist[self.index].takeDamage(125)
