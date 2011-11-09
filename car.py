@@ -23,6 +23,7 @@ class Car():
         self.vel = Velocity()
         self.turn = 0
         self.hp = 100
+        self.deaths = 0
         self.input = [False for i in range(5)]#left, right, up, down, space
         
         #taskMgr.add(self.move, "outtaThaWayImDrivingHere")

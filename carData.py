@@ -42,7 +42,7 @@ class CarData(DirectObject):
         self.prevtime = 0
         
     def addCar(self):
-        pos = self.spos.pop()
+        pos = self.spos[len(self.carlist) % len(self.spos)]
         tempvel = Velocity(500 - pos[0], 500 - pos[1])
         newcar = Car(pos[0], pos[1], tempvel.getD())
         self.carlist.append(newcar)
@@ -69,8 +69,15 @@ class CarData(DirectObject):
         
     def move(self, task):
         elapsed = task.time - self.prevtime
-        for car in self.carlist:
-            car.move(elapsed)
+        for i in range(len(self.carlist)):
+            self.carlist[i].move(elapsed)
+            if self.carlist[i].hp < 0:
+                pos = self.spos[i%len(self.spos)]
+                self.carlist[i].model.setPos(pos[0], pos[1], 0)
+                self.carlist[i].model.setH((math.degrees(math.atan2(500-pos[0], 500-pos[1]))-90)%360)
+                self.carlist[i].vel.setDM(0,0)
+                self.carlist[i].deaths += 1
+                self.carlist[i].hp = 100
         
         if self.index >= 0 and self.index < len(self.carlist):
             tempvel = Velocity()
