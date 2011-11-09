@@ -24,7 +24,7 @@ class World(DirectObject): #subclassing here is necessary to accept events
         base.disableMouse()
         self.setupLights()
         render.setShaderAuto() #turns on per-pixel lighting, normal mapping, etc (you probably want to use this)
-        base.camLens.setFar(1000)
+        base.camLens.setFar(1500)
         
     def setupLights(self):
         #ambient light

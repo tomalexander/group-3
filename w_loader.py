@@ -34,6 +34,10 @@ class w_loader:
         boundary_node.addSolid(plane4)
         boundary_node_path = render.attachNewNode(boundary_node)
         boundary_node_path.show()
+        wall_model = loader.loadModel("models/roomtiles.egg")
+        wall_model.reparentTo(render)
+        wall_model.setPos(500, 500, 0)
+        wall_model.setScale(36)
 
     def handle_line(self, line, y_pos):
         global spawn_locations
