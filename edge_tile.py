@@ -11,4 +11,4 @@ class edge_tile(terrain):
         #self.model = Actor("models/tile.egg", {})
         self.model.reparentTo(render)
         self.model.setScale(5.7)
-        self.model.setPos(self.x, self.y, 0)
+        self.model.setPos(self.x, self.y, .001)
