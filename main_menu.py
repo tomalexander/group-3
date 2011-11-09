@@ -15,7 +15,7 @@ panda_window_settings["num_players"] = 4
 class panda_window(wx.Frame):
 
     def __init__(self, parent, title):
-        super(panda_window, self).__init__(parent, title=title, size=(600,560))
+        super(panda_window, self).__init__(parent, title=title, size=(700,560))
         global panda_window_settings
         panda_window_settings["action"] = "none"
 
@@ -55,7 +55,7 @@ class panda_window(wx.Frame):
         #self.label_title = wx.StaticText(self.join_panel, label="Rezolution")
         #self.label_title.SetFont(wx.Font(20, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         self.button_host = wx.Button(self.join_panel, 2, label="Host")
-        self.join_hbox1.Add(self.image_title, 3, wx.TOP | wx.LEFT | wx.EXPAND, 10)
+        self.join_hbox1.Add(self.image_title, 0, wx.TOP | wx.LEFT | wx.EXPAND, 0)
         self.join_hbox1.Add(self.button_host, 1, wx.TOP, 70)
 
         #row 2
@@ -114,7 +114,7 @@ class panda_window(wx.Frame):
         self.host_image_title = wx.StaticBitmap(self.host_panel)
         self.host_image_title.SetBitmap(wx.Image("images/menu.png", wx.BITMAP_TYPE_PNG).Rescale(550,160).ConvertToBitmap())
         self.button_host = wx.Button(self.host_panel, 5, label="Join")
-        self.host_hbox1.Add(self.host_image_title, 3, wx.TOP | wx.LEFT | wx.EXPAND, 10)
+        self.host_hbox1.Add(self.host_image_title, 0, wx.TOP | wx.LEFT | wx.EXPAND, 0)
         self.host_hbox1.Add(self.button_host, 1, wx.TOP, 70)
 
         #row 2
