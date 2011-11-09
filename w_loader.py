@@ -38,6 +38,10 @@ class w_loader:
         wall_model.reparentTo(render)
         wall_model.setPos(500, 500, 0)
         wall_model.setScale(36)
+        wambientLight = AmbientLight("ambientLightForWall")
+        wambientLight.setColor((.1, .1, .1, 3))
+        wambientLightNP = wall_model.attachNewNode(wambientLight)
+        wall_model.setLight(wambientLightNP)
 
     def handle_line(self, line, y_pos):
         global spawn_locations
