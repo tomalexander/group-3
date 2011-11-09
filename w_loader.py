@@ -18,7 +18,7 @@ class w_loader:
     def load_world(self, world_number):
         file_name = "worlds/world" + str(world_number) + ".txt"
         file_handle = open(file_name, 'r')
-        y_pos = 1000
+        y_pos = 950
         for full_line in file_handle:
             line = full_line.strip()
             self.handle_line(line, y_pos)
