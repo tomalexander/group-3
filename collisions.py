@@ -39,4 +39,4 @@ def bumperCollision(car, bumper):
             car.vel.x *= -1
     else:
         car.vel.setDM(car.vel.getD(), car.vel.getM() * -1)
-    pass
+    car.vel.setDM(car.vel.getD(), car.vel.getM()*3/4)
