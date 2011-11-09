@@ -35,6 +35,7 @@ class TempCarData(object):
 class Client(object):
     def __init__(self, cars, ip_address, playername):
         self.carHitSound = base.loader.loadSfx("Sounds/CRASH2.wav")
+        self.startSound = base.loader.loadSfx("Sounds/ENGINESTART.wav")
         
         self.playername = playername
         
@@ -131,6 +132,7 @@ class Client(object):
         elif msgID == BEGIN_MESSAGE:
             self.carData.go = True
             self.textWaitObject.destroy()
+            self.startSound.play()
         elif msgID == END_MESSAGE:
             self.carData.go = False
             num = myIterator.getInt32()

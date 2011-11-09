@@ -39,6 +39,7 @@ class TempCarData(object):
 class Network(object):
     def __init__(self, cars, time, map, players, playername):
         self.carHitSound = base.loader.loadSfx("Sounds/CRASH2.wav")
+        self.startSound = base.loader.loadSfx("Sounds/ENGINESTART.wav")
         
         self.time = time
         self.map = map
@@ -113,6 +114,7 @@ class Network(object):
             self.carData.go = True
             self.textWaitObject.destroy()
             self.timer = taskdata.time
+            self.startSound.play()
         for pair in self.carData.collisionlist:
             if pair[0] < pair[1]:
                 if pair[0] == 0:
