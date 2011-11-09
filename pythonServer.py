@@ -6,6 +6,7 @@ from direct.showbase.DirectObject import DirectObject  #for event handling
 from direct.actor.Actor import Actor #for animated models
 from direct.interval.IntervalGlobal import *  #for compound intervals
 from direct.task import Task         #for update fuctions
+from direct.gui.OnscreenText import OnscreenText
 from w_loader import w_loader
 from w_loader import spawn_locations
 import collisions
@@ -38,6 +39,8 @@ class Network(object):
         
         world_loader = w_loader()
         world_loader.load_world(map)
+        
+        self.textWaitObject = OnscreenText(text="Waiting for players...", style=1, fg=(1,1,1,1), pos=(0.7,-0.95), scale = .07)
         
         global spawn_locations
         
@@ -97,6 +100,7 @@ class Network(object):
             for aClient in self.activeConnections:
                 self.cWriter.send(startDatagram, aClient)
             self.carData.go = True
+            self.textWaitObject.destroy()
         for pair in self.carData.collisionlist:
             if pair[0] < pair[1]:
                 collisions.collideCars(self.carData.carlist[pair[0]], self.carData.carlist[pair[1]])
