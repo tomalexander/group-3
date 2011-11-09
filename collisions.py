@@ -17,8 +17,10 @@ def collideCars(firstCar, secondCar):
     print secondM
     firstCar.vel.addDM(angle, -firstM)
     firstCar.vel.addDM(angle, secondM)
+    firstCar.takeDamage(int(math.floor(max(0, secondM * -1)))*2)
     secondCar.vel.addDM(angle, firstM)
     secondCar.vel.addDM(angle, -secondM)
+    secondCar.takeDamage(int(math.floor(max(0, firstM)))*2)
     dist = math.hypot(x, y)
     if dist < 1:
        dx = 1 / dist * x
