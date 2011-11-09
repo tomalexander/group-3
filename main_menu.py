@@ -214,6 +214,7 @@ class panda_window(wx.Frame):
     def host_start_game(self, event):
         global panda_window_settings
         panda_window_settings["action"] = "host"
+        self.text_name.SetValue(self.host_text_name.GetValue())
         self.start_game()
 
     def start_game(self):
