@@ -36,7 +36,7 @@ class Car():
         cNode = CollisionNode("car%d"%num)
         cNode.addSolid(cSphere)
         cNodePath = self.model.attachNewNode(cNode)
-        cNodePath.show()
+        #cNodePath.show()
         #registers a from object with the traverser with a corresponding handler
         cTrav.addCollider(cNodePath, cHandler)
     

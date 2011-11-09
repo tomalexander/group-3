@@ -13,10 +13,11 @@ class pit(trap):
         self.model.setScale(5.7)
         self.model.setPos(self.x+25, self.y+25, -28.5)
         self.set_up_collisions()
+        self.model.hide()
 
     def set_up_collisions(self):
         self.collision_sphere = CollisionSphere((0,0,5), 2)
         self.collision_node = CollisionNode("pit")
         self.collision_node.addSolid(self.collision_sphere)
         self.collision_node_path = self.model.attachNewNode(self.collision_node)
-        self.collision_node_path.show()
+        #self.collision_node_path.show()
