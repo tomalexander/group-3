@@ -49,7 +49,7 @@ class CarData(DirectObject):
     def addCar(self):
         pos = self.spos[len(self.carlist) % len(self.spos)]
         tempvel = Velocity(500 - pos[0], 500 - pos[1])
-        newcar = Car(pos[0], pos[1], tempvel.getD())
+        newcar = Car(pos[0], pos[1], tempvel.getD(), len(self.carlist)%4)
         self.carlist.append(newcar)
         if self.index >= 0 and self.index == len(self.carlist) - 1:
             tempvel.setDM(newcar.model.getH(), -75)

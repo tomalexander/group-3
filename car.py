@@ -8,10 +8,17 @@ import sys, os, math
 
 class Car():
     """This is a car."""
-    def __init__ (self, x=0, y=0, h=0):
+    def __init__ (self, x=0, y=0, h=0, car=0):
         #mydir = os.path.abspath(sys.path[0])
         #mydir = Filename.fromOsSpecific(mydir).getFullpath()
-        self.model = loader.loadModel("cars/bluecar.egg")
+        if car == 0:
+            self.model = loader.loadModel("cars/bluecar.egg")
+        elif car == 1:
+            self.model = loader.loadModel("cars/redcar.egg")
+        elif car == 2:
+            self.model = loader.loadModel("cars/greencar.egg")
+        else:
+            self.model = loader.loadModel("cars/yellowcar.egg")
         #self.model = Actor("models/panda-model")
         self.model.reparentTo(render)
         #self.model.setScale(.005)
