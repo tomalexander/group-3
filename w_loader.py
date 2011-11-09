@@ -22,6 +22,17 @@ class w_loader:
             line = full_line.strip()
             self.handle_line(line, y_pos)
             y_pos = y_pos + self.cell_height
+        plane1 = CollisionPlane(Plane(Vec3(0, 1, 0), Point3(0, -25, 0)))
+        plane2 = CollisionPlane(Plane(Vec3(0, -1, 0), Point3(0, 1025, 0)))
+        plane3 = CollisionPlane(Plane(Vec3(1, 0, 0), Point3(-25, 0, 0)))
+        plane4 = CollisionPlane(Plane(Vec3(-1, 0, 0), Point3(1025, 0, 0)))
+        boundary_node = CollisionNode("pit")
+        boundary_node.addSolid(plane1)
+        boundary_node.addSolid(plane2)
+        boundary_node.addSolid(plane3)
+        boundary_node.addSolid(plane4)
+        boundary_node_path = render.attachNewNode(boundary_node)
+        boundary_node_path.show()
 
     def handle_line(self, line, y_pos):
         global spawn_locations
