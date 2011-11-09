@@ -45,6 +45,7 @@ class CarData(DirectObject):
         
         taskMgr.add(self.move, "outtaThaWayImDrivingHere")
         self.prevtime = 0
+        self.go = False
         
     def addCar(self):
         pos = self.spos[len(self.carlist) % len(self.spos)]
@@ -74,32 +75,33 @@ class CarData(DirectObject):
             self.headlightSound.play()
         
     def move(self, task):
-        elapsed = task.time - self.prevtime
-        for i in range(len(self.carlist)):
-            self.carlist[i].move(elapsed)
-            if self.carlist[i].hp <= 0:
-                pos = self.spos[i%len(self.spos)]
-                self.carlist[i].model.setPos(pos[0], pos[1], 0)
-                tempvel = Velocity(500 - pos[0], 500 - pos[1])
-                self.carlist[i].model.setH(tempvel.getD())
-                self.carlist[i].vel.setXY(0,0)
-                self.carlist[i].deaths += 1
-                self.carlist[i].hp = 100
-                if i == self.index:
-                    self.explosionSound.play()
-        
-        if self.index >= 0 and self.index < len(self.carlist):
-            tempvel = Velocity()
-            tempvel.setDM(self.carlist[self.index].model.getH(), -75 * MULCAM)
-            tempvel.addDM(self.carlist[self.index].vel.getD(), self.carlist[self.index].vel.getM() * -10 / MULCAM)
-            camera.setPos(\
-                self.carlist[self.index].model.getX() + tempvel.x,\
-                self.carlist[self.index].model.getY() + tempvel.y,\
-                self.carlist[self.index].model.getZ() + 40 + self.carlist[self.index].vel.getM() * -5 / MULCAM)
-            camera.lookAt(self.carlist[self.index].model)
-            camera.setP(camera.getP() + 5)
-        
-        self.prevtime = task.time
+        if self.go:
+            elapsed = task.time - self.prevtime
+            for i in range(len(self.carlist)):
+                self.carlist[i].move(elapsed)
+                if self.carlist[i].hp <= 0:
+                    pos = self.spos[i%len(self.spos)]
+                    self.carlist[i].model.setPos(pos[0], pos[1], 0)
+                    tempvel = Velocity(500 - pos[0], 500 - pos[1])
+                    self.carlist[i].model.setH(tempvel.getD())
+                    self.carlist[i].vel.setXY(0,0)
+                    self.carlist[i].deaths += 1
+                    self.carlist[i].hp = 100
+                    if i == self.index:
+                        self.explosionSound.play()
+            
+            if self.index >= 0 and self.index < len(self.carlist):
+                tempvel = Velocity()
+                tempvel.setDM(self.carlist[self.index].model.getH(), -75 * MULCAM)
+                tempvel.addDM(self.carlist[self.index].vel.getD(), self.carlist[self.index].vel.getM() * -10 / MULCAM)
+                camera.setPos(\
+                    self.carlist[self.index].model.getX() + tempvel.x,\
+                    self.carlist[self.index].model.getY() + tempvel.y,\
+                    self.carlist[self.index].model.getZ() + 40 + self.carlist[self.index].vel.getM() * -5 / MULCAM)
+                camera.lookAt(self.carlist[self.index].model)
+                camera.setP(camera.getP() + 5)
+            
+            self.prevtime = task.time
         return Task.cont
 
     def carCollision(self, cEntry):

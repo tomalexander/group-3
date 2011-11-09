@@ -6,6 +6,8 @@ from direct.showbase.DirectObject import DirectObject  #for event handling
 from direct.actor.Actor import Actor #for animated models
 from direct.interval.IntervalGlobal import *  #for compound intervals
 from direct.task import Task         #for update fuctions
+from w_loader import w_loader
+from w_loader import spawn_locations
 import collisions
 import sys, math, random
 
@@ -14,6 +16,10 @@ CAR_MESSAGE = 2
 COLLIDED_MESSAGE = 3
 NEW_PLAYER_MESSAGE = 4
 PLAYER_ASSIGNMENT_MESSAGE = 5
+BEGIN_MESSAGE = 6
+END_MESSAGE = 7
+MAP_MESSAGE = 8
+
 
 
 #
@@ -26,7 +32,9 @@ class TempCarData(object):
 
 
 class Client(object):
-    def __init__(self, cars, ip_address):
+    def __init__(self, cars, ip_address, name):
+        self.name = name
+        
         self.carData = cars
         self.carData.index = -1
         
@@ -107,6 +115,17 @@ class Client(object):
             if collisionFrom == self.carData.index:
                 self.doCarCollision(myIterator.getUint8())
                 self.cWriter.send(self.verifyCollisionMessage(), self.myConnection)
+        elif msgID == MAP_MESSAGE:
+            map = myIterator.getString()
+            print map
+            world_loader = w_loader()
+            world_loader.load_world(map)
+            global spawn_locations
+            self.carData.spos = spawn_locations
+        elif msgID == BEGIN_MESSAGE:
+            print "GOGOGO!"
+            self.carData.go = True
+            
             
             
     def myNewPyDatagram(self):

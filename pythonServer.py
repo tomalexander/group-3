@@ -6,6 +6,8 @@ from direct.showbase.DirectObject import DirectObject  #for event handling
 from direct.actor.Actor import Actor #for animated models
 from direct.interval.IntervalGlobal import *  #for compound intervals
 from direct.task import Task         #for update fuctions
+from w_loader import w_loader
+from w_loader import spawn_locations
 import collisions
 import sys, math, random
 
@@ -14,6 +16,9 @@ CAR_MESSAGE = 2
 COLLIDED_MESSAGE = 3
 NEW_PLAYER_MESSAGE = 4
 PLAYER_ASSIGNMENT_MESSAGE = 5
+BEGIN_MESSAGE = 6
+END_MESSAGE = 7
+MAP_MESSAGE = 8
 
 
 #
@@ -24,8 +29,20 @@ class TempCarData(object):
         self.playerNum = 0
 
 class Network(object):
-    def __init__(self, cars):
+    def __init__(self, cars, time, map, players, playername):
+        self.time = time
+        self.map = map
+        self.players = players
+        self.playername = playername
+        self.playerscores = []
+        
+        world_loader = w_loader()
+        world_loader.load_world(map)
+        
+        global spawn_locations
+        
         self.carData = cars
+        self.carData.spos = spawn_locations
         self.carData.addCar()
         self.carData.index = 0
         self.carUpdates = [() for c in self.carData.carlist]
@@ -75,6 +92,11 @@ class Network(object):
                 self.cWriter.send(data, aClient)
             for data in collisionDatagrams:
                 self.cWriter.send(data, aClient)
+        if self.carData.go == False and len(self.carData.carlist) >= self.players:
+            startDatagram = self.startDatagram()
+            for aClient in self.activeConnections:
+                self.cWriter.send(startDatagram, aClient)
+            self.carData.go = True
         for pair in self.carData.collisionlist:
             if pair[0] < pair[1]:
                 collisions.collideCars(self.carData.carlist[pair[0]], self.carData.carlist[pair[1]])
@@ -106,12 +128,17 @@ class Network(object):
                 carHp = myIterator.getInt32()
                 self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carLights, carHp))
         elif msgID == NEW_PLAYER_MESSAGE:
+            if len(self.carData.carlist) >= self.players:
+                self.cWriter.send(self.startDatagram(), netDatagram.getConnection)
+            self.cWriter.send(self.mapDatagram(), netDatagram.getConnection())
             self.cWriter.send(self.addNewCar(), netDatagram.getConnection())
             self.returnAllCars(netDatagram.getConnection())
         elif msgID == COLLIDED_MESSAGE:
             print "Verified Collision"
             carNum = myIterator.getUint8()
             self.ignore.remove(carNum)
+        elif msgID == END_MESSAGE:
+            self.playerscores.append((myIterator.getString(), myIterator.getInt32()))
             
 
     def myNewPyDatagram(self):
@@ -119,6 +146,19 @@ class Network(object):
         myPyDatagram = PyDatagram()
         myPyDatagram.addUint8(PRINT_MESSAGE)
         myPyDatagram.addString("Hello, world!")
+        return myPyDatagram
+    
+    def startDatagram(self):
+        # Send a test message
+        myPyDatagram = PyDatagram()
+        myPyDatagram.addUint8(BEGIN_MESSAGE)
+        return myPyDatagram
+    
+    def mapDatagram(self):
+        # Send a test message
+        myPyDatagram = PyDatagram()
+        myPyDatagram.addUint8(MAP_MESSAGE)
+        myPyDatagram.addString(self.map)
         return myPyDatagram
     
     def updatePositions(self, carNum, data):
