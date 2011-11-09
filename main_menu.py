@@ -263,11 +263,15 @@ class panda_window(wx.Frame):
 
 
     def load_username(self):
-        file_handle = open("username.txt", 'r')
-        name = file_handle.readline().strip()
-        self.text_name.SetValue(name)
-        self.host_text_name.SetValue(name)
-        file_handle.close()
+        try:
+            file_handle = open("username.txt", 'r')
+            name = file_handle.readline().strip()
+            self.text_name.SetValue(name)
+            self.host_text_name.SetValue(name)
+            file_handle.close()
+        except IOError:
+            self.text_name.SetValue("Nameless")
+            self.host_text_name.SetValue("Nameless")
     
 def strip_txt(inp):
     if (inp[-4:] == ".txt"):
