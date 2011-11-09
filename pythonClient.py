@@ -33,8 +33,8 @@ class TempCarData(object):
 
 
 class Client(object):
-    def __init__(self, cars, ip_address, name):
-        self.name = name
+    def __init__(self, cars, ip_address, playername):
+        self.playername = playername
         
         self.carData = cars
         self.carData.index = -1
@@ -43,6 +43,7 @@ class Client(object):
         self.cListener = QueuedConnectionListener(self.cManager, 0)
         self.cReader = QueuedConnectionReader(self.cManager, 0)
         self.cWriter = ConnectionWriter(self.cManager,0)
+        self.textWaitObject = OnscreenText(text="Waiting for players...", style=1, fg=(1,1,1,1), pos=(0.7,-0.95), scale = .07)
         
         self.port_address=9099  # same for client and server
          
@@ -124,9 +125,19 @@ class Client(object):
             global spawn_locations
             self.carData.spos = spawn_locations
         elif msgID == BEGIN_MESSAGE:
-            print "GOGOGO!"
             self.carData.go = True
-            
+            self.textWaitObject.destroy()
+        elif msgID == END_MESSAGE:
+            self.carData.go = False
+            num = myIterator.getInt32()
+            if num == -1:
+                scoreDatagram = self.scoreDatagram()
+                self.cWriter.send(scoreDatagram, self.myConnection)
+            else:
+                textytext = "Most Numerous Deaths:"
+                for i in range(num):
+                    textytext += "\n\n%s: %d"%(myIterator.getString(), myIterator.getInt32())
+                self.textScore = OnscreenText(text=textytext, style=1, fg=(1,1,1,1), pos=(0,0.9), scale = .08)
             
             
     def myNewPyDatagram(self):
@@ -140,6 +151,14 @@ class Client(object):
         # Send a request to join the game
         myPyDatagram = PyDatagram()
         myPyDatagram.addUint8(NEW_PLAYER_MESSAGE)
+        return myPyDatagram
+    
+    def scoreDatagram(self):
+        # Send the player's score
+        myPyDatagram = PyDatagram()
+        myPyDatagram.addUint8(END_MESSAGE)
+        myPyDatagram.addString(self.playername)
+        myPyDatagram.addInt32(self.carData.carlist[self.carData.index].deaths)
         return myPyDatagram
     
     def verifyCollisionMessage(self):

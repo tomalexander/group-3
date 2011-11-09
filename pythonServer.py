@@ -21,7 +21,14 @@ BEGIN_MESSAGE = 6
 END_MESSAGE = 7
 MAP_MESSAGE = 8
 
-
+def pairsort(list):
+    for i in range(len(list)):
+        for k in range(len(list) - i - 1):
+            if list[k][1] > list[k+1][1]:
+                temp = list[k]
+                list[k] = list[k+1]
+                list[k+1] = temp
+    return list
 #
 class TempCarData(object):
     def __init__(self):
@@ -36,6 +43,7 @@ class Network(object):
         self.players = players
         self.playername = playername
         self.playerscores = []
+        self.timer = -1
         
         world_loader = w_loader()
         world_loader.load_world(map)
@@ -95,15 +103,36 @@ class Network(object):
                 self.cWriter.send(data, aClient)
             for data in collisionDatagrams:
                 self.cWriter.send(data, aClient)
-        if self.carData.go == False and len(self.carData.carlist) >= self.players:
+        if self.timer == -1 and self.carData.go == False and len(self.carData.carlist) >= self.players:
             startDatagram = self.startDatagram()
             for aClient in self.activeConnections:
                 self.cWriter.send(startDatagram, aClient)
             self.carData.go = True
             self.textWaitObject.destroy()
+            self.timer = taskdata.time
         for pair in self.carData.collisionlist:
             if pair[0] < pair[1]:
                 collisions.collideCars(self.carData.carlist[pair[0]], self.carData.carlist[pair[1]])
+        print taskdata.time
+        print self.timer + self.time * 60
+        print " "
+        if self.timer >= 0 and taskdata.time > self.timer + self.time * 60:
+            if self.carData.go:
+                self.carData.go = False
+                self.playerscores.append((self.playername, self.carData.carlist[self.carData.index].deaths))
+                stopDatagram = self.stopDatagram()
+                for aClient in self.activeConnections:
+                    self.cWriter.send(stopDatagram, aClient)
+            elif len(self.playerscores) >= len(self.carData.carlist) or taskdata.time > self.timer + self.time * 60 + 15:
+                self.playerscores = pairsort(self.playerscores)
+                textytext = "Most Numerous Deaths:"
+                for pair in self.playerscores:
+                    textytext += "\n\n%s: %d"%pair
+                self.textScore = OnscreenText(text=textytext, style=1, fg=(1,1,1,1), pos=(0,0.9), scale = .08)
+                scoreDatagram = self.scoreDatagram()
+                for aClient in self.activeConnections:
+                    self.cWriter.send(scoreDatagram, aClient)
+                
         self.carData.collisionlist = []
         self.clearCarData() #This is to prevent redundant messages from being sent
         return Task.cont
@@ -133,7 +162,7 @@ class Network(object):
                 self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carLights, carHp))
         elif msgID == NEW_PLAYER_MESSAGE:
             if len(self.carData.carlist) >= self.players:
-                self.cWriter.send(self.startDatagram(), netDatagram.getConnection)
+                self.cWriter.send(self.startDatagram(), netDatagram.getConnection())
             self.cWriter.send(self.mapDatagram(), netDatagram.getConnection())
             self.cWriter.send(self.addNewCar(), netDatagram.getConnection())
             self.returnAllCars(netDatagram.getConnection())
@@ -156,6 +185,23 @@ class Network(object):
         # Send a test message
         myPyDatagram = PyDatagram()
         myPyDatagram.addUint8(BEGIN_MESSAGE)
+        return myPyDatagram
+        
+    def stopDatagram(self):
+        # Send a test message
+        myPyDatagram = PyDatagram()
+        myPyDatagram.addUint8(END_MESSAGE)
+        myPyDatagram.addInt32(-1)
+        return myPyDatagram
+    
+    def scoreDatagram(self):
+        # Send a test message
+        myPyDatagram = PyDatagram()
+        myPyDatagram.addUint8(END_MESSAGE)
+        myPyDatagram.addInt32(len(self.playerscores))
+        for pair in self.playerscores:
+            myPyDatagram.addString(pair[0])
+            myPyDatagram.addInt32(pair[1])
         return myPyDatagram
     
     def mapDatagram(self):
