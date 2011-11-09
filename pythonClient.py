@@ -22,16 +22,7 @@ END_MESSAGE = 7
 MAP_MESSAGE = 8
 
 
-
-#
-class TempCarData(object):
-    def __init__(self):
-        self.collisionData = []
-        self.carData = []
-        self.playerNum = -1
-
-
-
+#Client connects to a game that is running a server
 class Client(object):
     def __init__(self, cars, ip_address, playername):
         self.carHitSound = base.loader.loadSfx("Sounds/CRASH2.wav")
@@ -56,38 +47,37 @@ class Client(object):
          
          # how long until we give up trying to reach the server?
         self.timeout_in_miliseconds=3000  # 3 seconds
-         
+        # make the connection
         self.myConnection = self.cManager.openTCPClientConnection(self.ip_address, self.port_address, self.timeout_in_miliseconds)
         if self.myConnection:
             self.cReader.addConnection(self.myConnection)  # receive messages from server
         else:
             print "No connection found!"
             sys.exit()
-        
+        # let the server know that a new car has joined the game
         self.cWriter.send(self.newPlayerMessage(), self.myConnection)
         taskMgr.add(self.tskReaderPolling,"Poll the connection reader",-40)
     
     def tskReaderPolling(self, taskdata):
+        # sends/recieves data every frame
         self.updates = [() for i in self.carData.carlist]
         while self.cReader.dataAvailable():
             datagram=NetDatagram()  # catch the incoming data in this instance
-            # Check the return value; if we were threaded, someone else could have
-            # snagged this data before we did
-            
             if self.cReader.getData(datagram):
-                self.myProcessDataFunction(datagram)
+                self.myProcessDataFunction(datagram) # handle the incoming data
         myCarDatagram = self.getPosDatagram()
         if myCarDatagram != None:
-            self.cWriter.send(myCarDatagram, self.myConnection)
+            self.cWriter.send(myCarDatagram, self.myConnection) # send the server your updated information
         return Task.cont
     
     def myProcessDataFunction(self, netDatagram):
+        # check a message and do what it says
         myIterator = PyDatagramIterator(netDatagram)
         msgID = myIterator.getUint8()
-        if msgID == PRINT_MESSAGE:
+        if msgID == PRINT_MESSAGE: # This is a debugging message
             messageToPrint = myIterator.getString()
             print messageToPrint
-        elif msgID == PLAYER_ASSIGNMENT_MESSAGE:
+        elif msgID == PLAYER_ASSIGNMENT_MESSAGE: # This assigns the player to a car
             playerNum = myIterator.getUint8()
             self.carData.index = playerNum
             self.playername += " (%d)"%playerNum
@@ -102,7 +92,7 @@ class Client(object):
             carLights = myIterator.getBool()
             carHp = myIterator.getInt32()
             self.updatePositions(playerNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carLights, carHp))
-        elif msgID == CAR_MESSAGE:
+        elif msgID == CAR_MESSAGE: # This updates a car
             carNum = myIterator.getUint8()
             if carNum != self.carData.index:
                 carXpos = myIterator.getFloat32()
@@ -116,24 +106,24 @@ class Client(object):
                 carLights = myIterator.getBool()
                 carHp = myIterator.getInt32()
                 self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carLights, carHp))
-        elif msgID == COLLIDED_MESSAGE:
+        elif msgID == COLLIDED_MESSAGE: # This runs car-car collisions
             collisionFrom = myIterator.getUint8()
             if collisionFrom == self.carData.index:
                 self.carHitSound.play()
                 self.doCarCollision(myIterator.getUint8())
                 self.cWriter.send(self.verifyCollisionMessage(), self.myConnection)
-        elif msgID == MAP_MESSAGE:
+        elif msgID == MAP_MESSAGE: # This sets the map
             map = myIterator.getString()
             print map
             world_loader = w_loader()
             world_loader.load_world(map)
             global spawn_locations
             self.carData.spos = spawn_locations
-        elif msgID == BEGIN_MESSAGE:
+        elif msgID == BEGIN_MESSAGE: # This starts the game
             self.carData.go = True
             self.textWaitObject.destroy()
             self.startSound.play()
-        elif msgID == END_MESSAGE:
+        elif msgID == END_MESSAGE: # This ends the game, and then displays the score on the second receipt
             self.carData.go = False
             num = myIterator.getInt32()
             if num == -1:
@@ -175,6 +165,7 @@ class Client(object):
         return myPyDatagram
     
     def updatePositions(self, carNum, data):
+        # set a car's properites, create it if it doesn't exist
         if len(self.carData.carlist) > carNum:
             self.carData.carlist[carNum].model.setPos(data[0], data[1], 0)
             self.carData.carlist[carNum].vel.setXY(data[2], data[3])
@@ -193,6 +184,7 @@ class Client(object):
             self.carData.carlist[carNum].hp = data[7]
     
     def getPosDatagram(self):
+        # send player car data
         num = self.carData.index
         if num < 0:
             return None
@@ -213,11 +205,3 @@ class Client(object):
     
     def doCarCollision(self, otherCarNum):
         collisions.collideCars(self.carData.carlist[self.carData.index], self.carData.carlist[otherCarNum])
-
-
-"""
-print "test1"
-client = Client()
-run()
-print "test2"
-"""

@@ -29,12 +29,7 @@ def pairsort(list):
                 list[k] = list[k+1]
                 list[k+1] = temp
     return list
-#
-class TempCarData(object):
-    def __init__(self):
-        self.collisionData = []
-        self.carData = []
-        self.playerNum = 0
+
 
 class Network(object):
     def __init__(self, cars, time, map, players, playername):
@@ -79,6 +74,7 @@ class Network(object):
         taskMgr.add(self.tskReaderPolling,"Poll the connection reader",-40)
 
     def tskListenerPolling(self, taskdata):
+        # if a new connection is made, add it to the list
         if self.cListener.newConnectionAvailable():
          
             rendezvous = PointerToConnection()
@@ -92,14 +88,15 @@ class Network(object):
         return Task.cont
     
     def tskReaderPolling(self, taskdata):
-        selfCarDatagram = self.getCarPosDatagramFromCar(self.carData.index)
+        # every frame, read messages, and then send out updates to all clients
+        selfCarDatagram = self.getCarPosDatagramFromCar(self.carData.index) # add self to list of updates
         self.myProcessDataFunction(selfCarDatagram)
+        # loop through all messages recieved
         while self.cReader.dataAvailable():
             datagram=NetDatagram()  # catch the incoming data in this instance
-            # Check the return value; if we were threaded, someone else could have
-            # snagged this data before we did
             if self.cReader.getData(datagram):
-                self.myProcessDataFunction(datagram)
+                self.myProcessDataFunction(datagram) # handle the message
+        #send out car and collision messages
         carPosDatagrams = self.getCarPosDatagrams()
         collisionDatagrams = self.getCollisionDatagrams()
         for aClient in self.activeConnections:
@@ -107,6 +104,7 @@ class Network(object):
                 self.cWriter.send(data, aClient)
             for data in collisionDatagrams:
                 self.cWriter.send(data, aClient)
+        # start game if enough players have joined
         if self.timer == -1 and self.carData.go == False and len(self.carData.carlist) >= self.players:
             startDatagram = self.startDatagram()
             for aClient in self.activeConnections:
@@ -115,14 +113,13 @@ class Network(object):
             self.textWaitObject.destroy()
             self.timer = taskdata.time
             self.startSound.play()
+        # run collisions
         for pair in self.carData.collisionlist:
             if pair[0] < pair[1]:
                 if pair[0] == 0:
                     self.carHitSound.play()
                 collisions.collideCars(self.carData.carlist[pair[0]], self.carData.carlist[pair[1]])
-        print taskdata.time
-        print self.timer + self.time * 60
-        print " "
+        # if time is up, end game and print scores
         if self.timer >= 0 and taskdata.time > self.timer + self.time * 60:
             if self.carData.go:
                 self.carData.go = False
@@ -130,7 +127,7 @@ class Network(object):
                 stopDatagram = self.stopDatagram()
                 for aClient in self.activeConnections:
                     self.cWriter.send(stopDatagram, aClient)
-            elif len(self.playerscores) >= len(self.carData.carlist) or taskdata.time > self.timer + self.time * 60 + 15:
+            elif len(self.playerscores) >= len(self.carData.carlist) or (taskdata.time > self.timer + self.time * 60 + 15 and self.playerscores != []):
                 self.playerscores = pairsort(self.playerscores)
                 textytext = "Most Numerous Deaths:"
                 for pair in self.playerscores:
@@ -139,23 +136,25 @@ class Network(object):
                 scoreDatagram = self.scoreDatagram()
                 for aClient in self.activeConnections:
                     self.cWriter.send(scoreDatagram, aClient)
+                self.playerscores = []
                 
         self.carData.collisionlist = []
         self.clearCarData() #This is to prevent redundant messages from being sent
         return Task.cont
     
     def myProcessDataFunction(self, netDatagram):
+        # check a message and do what it says
         myIterator = PyDatagramIterator(netDatagram)
         msgID = myIterator.getUint8()
-        if msgID == PRINT_MESSAGE:
+        if msgID == PRINT_MESSAGE: # This is a debugging message
             messageToPrint = myIterator.getString()
             print messageToPrint
-        elif msgID == CAR_MESSAGE:
+        elif msgID == CAR_MESSAGE: # This updates a car
             carNum = myIterator.getUint8()
-            for num in self.ignore:
+            for num in self.ignore: # if the car message is out of date, ignore it
                 if num == carNum:
                     break
-            else:
+            else: # else update the car
                 carXpos = myIterator.getFloat32()
                 carYpos = myIterator.getFloat32()
                 carXvel = myIterator.getFloat32()
@@ -167,17 +166,16 @@ class Network(object):
                 carLights = myIterator.getBool()
                 carHp = myIterator.getInt32()
                 self.updatePositions(carNum, (carXpos, carYpos, carXvel, carYvel, carHeading, carInput, carLights, carHp))
-        elif msgID == NEW_PLAYER_MESSAGE:
+        elif msgID == NEW_PLAYER_MESSAGE: # This creates a new player
             if len(self.carData.carlist) >= self.players:
                 self.cWriter.send(self.startDatagram(), netDatagram.getConnection())
             self.cWriter.send(self.mapDatagram(), netDatagram.getConnection())
             self.cWriter.send(self.addNewCar(), netDatagram.getConnection())
             self.returnAllCars(netDatagram.getConnection())
-        elif msgID == COLLIDED_MESSAGE:
-            print "Verified Collision"
+        elif msgID == COLLIDED_MESSAGE: # This verifies that a car has recieved its collision message and is now up to date
             carNum = myIterator.getUint8()
             self.ignore.remove(carNum)
-        elif msgID == END_MESSAGE:
+        elif msgID == END_MESSAGE: # This recieves a player score
             self.playerscores.append((myIterator.getString(), myIterator.getInt32()))
             
 
@@ -257,9 +255,9 @@ class Network(object):
     
     def clearCarData(self):
         self.carUpdates = [() for c in self.carData.carlist]
-        self.collisionData = []
     
     def getCarPosDatagrams(self):
+        # makes a list of datagrams for each car that updated this frame
         myDatagrams = []
         for i in range(len(self.carUpdates)):
             if self.carUpdates[i] != ():
@@ -268,6 +266,7 @@ class Network(object):
         return myDatagrams
     
     def getCarPosDatagram(self, num, data):
+        # creates a car_message datagram from data
         newDatagram = PyDatagram()
         newDatagram.addUint8(CAR_MESSAGE)
         newDatagram.addUint8(num)
@@ -280,6 +279,7 @@ class Network(object):
         return newDatagram
     
     def getCarPosDatagramFromCar(self, num):
+        # creates a car_message datagram from the entry in carData (used to get new cars up to date)
         newDatagram = PyDatagram()
         newDatagram.addUint8(CAR_MESSAGE)
         newDatagram.addUint8(num)
@@ -296,6 +296,7 @@ class Network(object):
         return newDatagram
     
     def getNewCarPosDatagram(self, num):
+        # same as getCarPosDatagramFromCar, but is a player_assignment_message
         newDatagram = PyDatagram()
         newDatagram.addUint8(PLAYER_ASSIGNMENT_MESSAGE)
         newDatagram.addUint8(num)
@@ -312,6 +313,7 @@ class Network(object):
         return newDatagram
     
     def getCollisionDatagrams(self):
+        # returns a list of collision datagrams
         myDatagrams = []
         for data in self.carData.collisionlist:
             newDatagram = PyDatagram()
@@ -324,6 +326,7 @@ class Network(object):
         return myDatagrams
     
     def returnAllCars(self, connection):
+        # sends a car_message for each car in carData to a new connection
         carPosDatagrams = [self.getCarPosDatagramFromCar(i) for i in range(len(self.carData.carlist))]
         for data in carPosDatagrams:
             self.cWriter.send(data, connection)
@@ -334,11 +337,3 @@ class Network(object):
         return self.getNewCarPosDatagram(num)
 
 
-
-
-"""
-print "test1"
-server = Network()
-run()
-print "test2"
-"""
