@@ -9,6 +9,7 @@ panda_window_settings["ip"] = "none"
 panda_window_settings["player_name"] = "none"
 panda_window_settings["selected_map"] = "none"
 panda_window_settings["game_time"] = 5
+panda_window_settings["num_players"] = 4
 
 class panda_window(wx.Frame):
 
@@ -37,6 +38,7 @@ class panda_window(wx.Frame):
         self.init_host_ui()
         self.update_map_list()
         self.get_ip_address()
+        self.load_username()
         
 
 
@@ -202,11 +204,17 @@ class panda_window(wx.Frame):
     def join_start_game(self, event):
         global panda_window_settings
         panda_window_settings["action"] = "join"
+        file_handle = open("username.txt", 'w')
+        file_handle.write(self.text_name.GetValue())
+        file_handle.close()
         self.start_game()
 
     def host_start_game(self, event):
         global panda_window_settings
         panda_window_settings["action"] = "host"
+        file_handle = open("username.txt", 'w')
+        file_handle.write(self.host_text_name.GetValue())
+        file_handle.close()
         self.start_game()
 
     def start_game(self):
@@ -215,6 +223,7 @@ class panda_window(wx.Frame):
         panda_window_settings["player_name"] = self.text_name.GetValue()
         panda_window_settings["selected_map"] = self.maps[self.map_list.GetSelection()]
         panda_window_settings["game_time"] = int(self.host_text_time.GetValue())
+        panda_window_settings["num_players"] = self.host_players.GetSelection()+1
         self.Close(True)
         self.Destroy()
 
@@ -247,6 +256,12 @@ class panda_window(wx.Frame):
         self.map_list.SetSelection(0)
 
 
+    def load_username(self):
+        file_handle = open("username.txt", 'r')
+        name = file_handle.readline().strip()
+        self.text_name.SetValue(name)
+        self.host_text_name.SetValue(name)
+        file_handle.close()
     
 def strip_txt(inp):
     if (inp[-4:] == ".txt"):
