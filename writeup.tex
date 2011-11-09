@@ -1,0 +1,36 @@
+\documentclass[12pt, letter]{article}
+\special{papersize=8.5in,11in}
+\usepackage[cm]{fullpage}
+\title{Rezolution}
+\date{}
+\author{Rosa Tung\\
+Brett Kaplan\\
+Dan Hawkins\\
+Andrew Keohane\\
+Tom Alexander}
+\begin{document}
+\maketitle
+\section*{Rosa Tung}
+\hspace{0.25in}Our game heavily focuses on the use of stealth techniques to navigate throughout the match. This is interpreted through the construction of the environment both spatially and visually though the use and representation of shapes and colors. The shapes are fairly simplistic, utilizing a simple line-space matrix that complements the moments and movements of the player characters and more importantly enhances the lights and darks of the game to which they eventually become the sole focus. The use of neon colors and prudent text further helped us achieve that goal of creating a visual cohesive yin-yang look.
+
+I conceived of the art aspects of the game and orchestrated the visual style and look. This includes maya models, textures, etc.
+\section*{Brett Kaplan}
+\hspace{0.25in}I spent most of my time focusing on how the cars moved, and how the cameras would respond to this, and much tweaking of the headlight system. Working on various aspects of player input was an extension of this. Most of my work with car movement had the goal of creating a fun movement system, based loosely upon how cars actually move, but with enough differences in slide and certain types of feedback to be interesting. I designed the camera movement to swing around in interesting ways. Additionally, the camera’s position relative to the car is based on the car’s heading and the car’s velocity, so players can learn to gauge their car’s velocity by where their camera is. As the game-play started to turn into something distinctly bumper-cars-esque, I made sure that the lighting (ambient and headlights) and the camera movement worked together to enhance the feel of the movement system.
+\section*{Dan Hawkins}
+\hspace{0.25in}I worked on most all aspects of the game non-coding and non-artwork related. I made all the maps. I worked on developing the overall game play, and worked on developing traps and environmental objects. A lot of the objects and game play elements I worked on and thought of couldn’t get implemented due to time, so to make up for this I tried to make a lot of maps with a lot of variety in game play in order to make up for the smaller amount of interactive objects. I also did the sounds in the game.
+\section*{Andrew Keohane}
+\hspace{0.25in}I worked mainly on the networking aspect of the project. I wrote the pythonClient and pythonServer files, which pass messages between all of the players to update car positions and begin/end the game. To enable networking, I had one instance of the game create a server, which would communicate directly to all clients, and detect all car-car collisions. Each other instance is a client that only communicates with the server, continually passing to the server the values for its car and reading from the server all other cars. I also wrote the collisions file, which handles collisions between two cars and between a car and a bumper (wall). In addition, I implemented the headlights and car damage/death/respawn.
+\section*{Tom Alexander}
+\hspace{0.25in}My role in this group was the implementation of the main menu, using the wxpython library, the bulk of the world loading code, and the implementation of the bulk of the various traps located around the arena. Our main focus in this game was the implementation of social gameplay, which Andrew implemented through the multiplayer networking, but I continued the networked-spirit in the main menu, which also consisted of a server-side portion written in PHP using a sqlite database to maintain a list of currently running servers to faciliate the match making process. I also set up a quick and dirty echo server to faciliate the acquision of the player’s public ip address, which is a necessary first step towards interactive gameplay. Also, I put in the particle effect smoke system to indicate the player’s health.
+\vspace{1in}
+\hrule
+\vspace{0.5in}
+\hrule
+\vspace{0.5in}
+\hrule
+\vspace{0.5in}
+\hrule
+\vspace{0.5in}
+\hrule
+
+\end{document}
