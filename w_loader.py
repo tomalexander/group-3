@@ -18,11 +18,11 @@ class w_loader:
     def load_world(self, world_number):
         file_name = "worlds/world" + str(world_number) + ".txt"
         file_handle = open(file_name, 'r')
-        y_pos = 0
+        y_pos = 1000
         for full_line in file_handle:
             line = full_line.strip()
             self.handle_line(line, y_pos)
-            y_pos = y_pos + self.cell_height
+            y_pos = y_pos - self.cell_height
         plane1 = CollisionPlane(Plane(Vec3(0, 1, 0), Point3(0, -25, 0)))
         plane2 = CollisionPlane(Plane(Vec3(0, -1, 0), Point3(0, 1025, 0)))
         plane3 = CollisionPlane(Plane(Vec3(1, 0, 0), Point3(-25, 0, 0)))
