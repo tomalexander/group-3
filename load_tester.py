@@ -44,7 +44,7 @@ init_smoke()
 global spawn_locations
 if panda_window_settings["action"] == "host":
     w.cars = CarData([], 0)
-    w.connection = pythonServer.Network(w.cars, panda_window_settings["game_time"], panda_window_settings["selected_map"], 2, panda_window_settings["player_name"])
+    w.connection = pythonServer.Network(w.cars, panda_window_settings["game_time"], panda_window_settings["selected_map"], panda_window_settings["num_players"], panda_window_settings["player_name"])
     taskMgr.doMethodLater(10, ping_server_browser, 'ping_server_browser_daemon')
 elif panda_window_settings["action"] == "join":
     print "Made it to client creation"
